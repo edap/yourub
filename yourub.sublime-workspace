@@ -1,0 +1,338 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"https",
+				"https"
+			],
+			[
+				"be",
+				"be_true"
+			],
+			[
+				"is",
+				"is_alive"
+			],
+			[
+				"ra",
+				"raise_error"
+			],
+			[
+				"res",
+				"rescue"
+			],
+			[
+				"Ar",
+				"ArgumentError"
+			],
+			[
+				"sel",
+				"self"
+			],
+			[
+				"N",
+				"NATIONS"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "module Yourub\n  class Page\n    include Logging\n\n    attr_accessor :url\n\n    def initialize(nation = \"US\", category = \"Sports\", type = \"most_recent\")\n      @nation          = nation\n      @category        = category\n      @type            = type\n      @api_url         = \"https://gdata.youtube.com/feeds/api/standardfeeds/\"\n      @json            = \"?v=2&alt=json&prettyprint=true\"\n      @required_fields = \"(title,media:group(media:player(@url)))\"\n      @url             = set_url\n    end\n\n    NATIONS = [\n      'AR','AU','AT','BE','BR','CA','CL','CO','CZ','EG','FR','DE','GB','HK',\n      'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',\n      'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']\n\n    CATEGORIES = [\n      'Comedy', 'People', 'Entertainment', 'Music', 'Howto',\n      'Sports', 'Autos', 'Education', 'Film', 'News', 'Animals',\n      'Tech', 'Travel','Games', 'Shortmov']\n\n    TYPES = [ \n      'top_rated', 'top_favorites', 'most_viewed', 'most_popular',\n      'most_recent', 'most_discussed', 'most_linked', 'most_responded',\n      'recently_featured', 'watch_on_mobile']      \n\n    def valid?\n      raise ArgumentError.new('params not available') unless(\n          NATIONS.include?(@nation) && \n          CATEGORIES.include?(@category) && \n          TYPES.include?(@type)\n        )\n      true\n    end\n\n    def is_alive?\n      begin\n        Net::HTTP.start(@url.host, @url.port,\n          :use_ssl => @url.scheme == 'https') do |https|\n          request = Net::HTTP::Get.new @url\n          response = https.request request\n          if response.code == \"200\"\n            return true\n          else\n            logger.error \"page #{@url} return code #{res.code}\"\n            return false\n          end\n        end\n      rescue StandardError => e\n        return false\n        logger.error \"Error #{e} trying to connect to the given url #{@url}\"       \n      end\n    end\n\n    def set_url\n      url = \"#{@api_url}#{@nation}/#{@type}_#{@category}#{@json}#{@required_fields}\"\n      @url = URI.parse(url)\n      return @url if (valid? && is_alive?)\n\n      # begin\n      #   valid?\n      #   is_alive?\n      #   puts @url\n      #   return @url\n      # rescue ArgumentError => e\n      #   return false\n      #   logger.error \"#{e}\"\n      # end\n    end\n\n    # TODO\n\n    # Va capito bene cosa e' un modulo e come si usa in una classe composta da diversi files\n    # http://stackoverflow.com/questions/151505/difference-between-a-class-and-a-module\n\n    # Gemme, due modi per organizzarle, il primo\n    # nel file lib/gemma.rb vengono inclusi tutti i sotto files.\n    # Ogninu di questi comincica con \n    # module NomeGemma e puo' includere classi o vattelapesca\n    # un esempio e' tire\n    # https://github.com/karmi/tire/blob/master/lib/tire.rb\n    # e rake\n    # https://github.com/jimweirich/rake/blob/master/lib/rake.rb\n\n    # oppure nel file lib/gemma.rb\n    # come in thor\n    # https://github.com/erikhuda/thor/blob/master/lib/thor.rb\n    # crei una classe col nome della gemma\n\n    # esempio piu' chiaro e' faraday\n    # https://github.com/lostisland/faraday/blob/master/lib/faraday.rb'\n    \n    # integrare un logger\n    # tire ha un logger https://github.com/karmi/tire/blob/master/lib/tire/logger.rb\n    # aggiungere diversi tipi di exception, far si che queste possano dialogre con la classe Logger\n    # unire i due metodi di sopra\n    # fare un test ciclando due url\n    # aggiungere le Exception, facendo si che il ciclo passi alla seconda ulr se la prima non passa\n\n    # pushare su github\n\n\n  end\nend",
+			"file": "lib/yourub/page.rb",
+			"file_size": 3554,
+			"file_write_time": 1378764534000000,
+			"settings":
+			{
+				"buffer_size": 3553,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Ruby/Ruby.sublime-build",
+	"command_palette":
+	{
+		"height": 364.0,
+		"selected_items":
+		[
+			[
+				"Pac",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 208.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/da/iocose/Gemfile",
+		"/home/da/iocose/app/assets/stylesheets/application.css.scss",
+		"/home/da/iocose/config/environments/development.rb",
+		"/home/da/iocose/config/routes.rb",
+		"/home/da/iocose/app/views/layouts/_admin_navigation.html.haml",
+		"/home/da/iocose/app/views/layouts/admin.html.haml",
+		"/home/da/iocose/config/database.yml",
+		"/home/da/iocose/config/application.yml",
+		"/home/da/iocose/config/application.rb",
+		"/home/da/iocose/db/schema.rb",
+		"/home/da/codebeispiel/WeightedQuickUnionUF.rb",
+		"/home/da/codebeispiel/README.txt",
+		"/home/da/codebeispiel/mediumUF.txt",
+		"/home/da/yourub/lib/yourub.rb",
+		"/home/da/yourub/lib/yourub/logging.rb",
+		"/home/da/yourub/lib/yourub/page.rb",
+		"/home/da/yourub/lib/yourub/parser.rb",
+		"/home/da/yourub/spec/page_spec.rb",
+		"/home/da/yourub/spec/yourub_spec.rb",
+		"/home/da/public_html/cake/app/webroot/websites/aca/theories.php",
+		"/home/da/ruby/poignant/module_ex/logging.rb",
+		"/home/da/ruby/poignant/module_ex/use_logger.rb",
+		"/home/da/yourub/lib/yourub/logger.rb",
+		"/home/da/ruby/module_use_me.rb",
+		"/home/da/ruby/modulo_serre_prati.rb",
+		"/home/da/ruby/watchful_saint_agnes.rb",
+		"/home/da/yourub/lib/yourub/connect.rb",
+		"/home/da/yourub/lib/yourub/watchful_saint_agnes.rb",
+		"/home/da/ruby/fibonacci.rb",
+		"/home/da/ruby/test.rb",
+		"/home/da/yourub/lib/yourub/old.rb",
+		"/home/da/Desktop/todo",
+		"/home/da/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/da/public_html/unique/app/assets/javascripts/application.js",
+		"/home/da/public_html/unique/app/views/pages/_archiv.html.erb",
+		"/home/da/public_html/unique/app/views/shared/_thumbs.html.erb",
+		"/home/da/public_html/unique/app/assets/javascripts/unique.js",
+		"/home/da/public_html/unique/app/views/pages/_weare.html.erb",
+		"/home/da/public_html/unique/app/views/uber-uns.html",
+		"/home/da/yourub/spec/parser_spec.rb",
+		"/home/da/yourub/spec/connect_spec.rb",
+		"/home/da/yourub/features/parser.feature",
+		"/home/da/yourub/lib/yourub/cli.rb",
+		"/home/da/yourub/bin/yourub",
+		"/home/da/yourub/yourub.gemspec",
+		"/home/da/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/da/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/da/yourub/features/support/setup.rb",
+		"/home/da/yourub/Gemfile",
+		"/media/kurt_ext2/backup/da/ruby/code_basic/variables.rb",
+		"/media/kurt_ext2/backup/da/ruby/everyday_scripting/code/affinity-trip/affinity-trip.rb",
+		"/media/kurt_ext2/backup/da/ruby/google.rb",
+		"/media/kurt_ext2/backup/da/ruby/code_basic/array.rb",
+		"/home/da/public_html/unique/app/assets/stylesheets/user/base.css.scss",
+		"/home/da/public_html/cake/app/views/pages/home_random.ctp",
+		"/home/da/public_html/cake/app/config/routes.php",
+		"/home/da/public_html/unique/config/application.rb",
+		"/home/da/public_html/unique/config/environments/production.rb",
+		"/home/da/public_html/unique/app/views/pages/show.html.erb",
+		"/home/da/public_html/unique/app/views/pages/_googlemap.html.erb",
+		"/home/da/public_html/unique/app/views/pages/_kontakt.html.erb",
+		"/home/da/public_html/unique/app/views/pages/_kataloge.html.erb",
+		"/home/da/public_html/unique/app/assets/stylesheets/uberuns.css",
+		"/home/da/public_html/unique/config/database.yml",
+		"/home/da/public_html/unique/db/seeds.rb",
+		"/home/da/public_html/unique/config/environment.rb",
+		"/home/da/public_html/unique/config/routes.rb",
+		"/home/da/public_html/unique/config/boot.rb",
+		"/home/da/public_html/unique/app/controllers/application_controller.rb",
+		"/home/da/public_html/unique/config.ru",
+		"/home/da/public_html/unique/app/models/item.rb",
+		"/home/da/public_html/unique/app/models/image.rb",
+		"/home/da/public_html/unique/app/models/gallery.rb"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"/home/da/Downloads/tire-master",
+			"/home/da/public_html/unique"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"betterman94",
+			"dapx",
+			"kundali",
+			"pizza hut is",
+			"to communicate with us",
+			"Playsta",
+			"Secretly",
+			"Playstation hac",
+			"to control",
+			"ericsson is ",
+			"<sup",
+			"<sup>",
+			"<sup></sup>",
+			"<sup>",
+			"<sup></sup>",
+			"<sup>",
+			"Jinn",
+			"120",
+			"Jinn",
+			"($",
+			"</iframe>\"",
+			"\\\"></",
+			"\"audio\" =>",
+			"\"audio\" => ",
+			"Logger",
+			"@format",
+			"@type",
+			"User",
+			"end",
+			"@most_recent",
+			"ET",
+			"select",
+			"ctrl+alt",
+			"foodie",
+			"background",
+			"cboxLoadedContent",
+			"inline_content",
+			"order",
+			"by_join_position"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"1994immortality",
+			"postgres",
+			"",
+			"\"audio\" => \"<iframe width=\\\"100%\\\" height=\\\"166\\\" scrolling=\\\"no\\\" frameborder=\\\"no\\\" src=\\\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F104440492\\\"></iframe>\"",
+			"yourub"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "lib/yourub/page.rb",
+					"settings":
+					{
+						"buffer_size": 3553,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								725,
+								512
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 675.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 228.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/home/da/yourub/yourub.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 249.0,
+	"status_bar_visible": true
+}
