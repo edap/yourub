@@ -29,24 +29,29 @@ If you are using rails, create a app/config/yourub.yml file as follow:
     application_version: "version_number_of_your_app"
     log_level: WARN
 
+
 As default beahviour, the Yourub gem retrieve 2 videos for each category for the default country, USA.
 
   result = Yourub::Search.new()
   result.categories
   result.videos
 
+
 Actually, is possible to select videos for a given country specifying the nation parameter (equivalent to the regionCode on the native youtube API) The parameter value is an [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm) alpha-2 country code.
 
   Yourub::Search.new(nation: "IT")
+
 
 for a given category
 
   Yourub::Search.new(category: "Sports")
 
+
 to filter out videos depending on the number of views that they have
 
   filter = {'views' => ">= 1000"}
   Yourub::Search.new(filter: filter)
+
 
 to set the max number of videos for each nation/category request (max 50, default 2)
 
