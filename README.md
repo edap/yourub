@@ -21,45 +21,45 @@ Or install it yourself as:
 Get a developer key as explained [here](http://www.youtube.com/watch?v=Im69kzhpR3I)
 If you are using rails, create a app/config/yourub.yml file as follow:
 
-  yourub:
-    developer_key: 'yourdeveloperkey'
-    youtube_api_service_name: 'youtube'
-    youtube_api_version: 'v3'
-    application_name: "nameofyourapp"
-    application_version: "version_number_of_your_app"
-    log_level: WARN
-
+    yourub:
+      developer_key: 'yourdeveloperkey'
+      youtube_api_service_name: 'youtube'
+      youtube_api_version: 'v3'
+      application_name: "nameofyourapp"
+      application_version: "version_number_of_your_app"
+      log_level: WARN
 
 As default beahviour, the Yourub gem retrieve 2 videos for each category for the default country, USA.
 
-  result = Yourub::Search.new()
-  result.categories
-  result.videos
+    result = Yourub::Search.new()
+    result.categories
+    result.videos
 
 
 Actually, is possible to select videos for a given country specifying the nation parameter (equivalent to the regionCode on the native youtube API) The parameter value is an [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm) alpha-2 country code.
 
-  Yourub::Search.new(nation: "IT")
+    Yourub::Search.new(nation: "IT")
 
 
 for a given category
 
-  Yourub::Search.new(category: "Sports")
+    Yourub::Search.new(category: "Sports")
 
 
 to filter out videos depending on the number of views that they have
 
-  filter = {'views' => ">= 1000"}
-  Yourub::Search.new(filter: filter)
+    filter = {'views' => ">= 1000"}
+    Yourub::Search.new(filter: filter)
 
 
 to set the max number of videos for each nation/category request (max 50, default 2)
 
-  result = Yourub::Search.new(max_results: 25)
+    result = Yourub::Search.new(max_results: 25)
 
 Or all the options together
-  filter = {'views' => "<= 200"}
-  Yourub::Search.new(nation: "FR", category: "Comedy", max_results: 25, filter: filter)
+
+    filter = {'views' => "<= 200"}
+    Yourub::Search.new(nation: "FR", category: "Comedy", max_results: 25, filter: filter)
 
 ##TODO
 
