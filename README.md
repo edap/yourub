@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/edap/yourub.png)](https://codeclimate.com/github/edap/yourub)
+
 # Yourub
 
 Yourub is a gem that finds the most recent videos from the Youtube API for the given nation, category and number of views. It's updated to the version 3 of the youtube api
