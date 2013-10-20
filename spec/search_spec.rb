@@ -3,15 +3,15 @@ require 'yourub'
 describe Yourub::Search do
 
   context "on initialize" do
-    it "retrieves all the available categories for the default country" do
-      result = Yourub::Search.new()
-      expect(result.categories).to be_a_kind_of(Array)
-    end
+    # it "retrieves all the available categories for the default country" do
+    #   result = Yourub::Search.new()
+    #   expect(result.categories).to be_a_kind_of(Array)
+    # end
 
-    it "retrieves all the available categories for a given country" do
-      result = Yourub::Search.new(nation: "US")
-      expect(result.categories).to be_a_kind_of(Array)
-    end
+    # it "retrieves all the available categories for a given country" do
+    #   result = Yourub::Search.new(nation: "US")
+    #   expect(result.categories).to be_a_kind_of(Array)
+    # end
 
     it "return an error if the given country does not exists" do
       expect{ Yourub::Search.new(nation: "MOON") }.to raise_error(ArgumentError)
@@ -38,9 +38,14 @@ describe Yourub::Search do
     end
 
     it "retrieves videos that have more than 100 views" do
-      filter = {'views' => ">= 100"}
+      filter = {views: ">= 100"}
       result = Yourub::Search.new(nation: "US", category: "Sports", max_results: 5, filter: filter)
       expect(result.videos).to be_a_kind_of(Array)
+    end
+
+    it "retrieves a video for the given id" do
+      result = Yourub::Search.new(video_id: "mN0Dbj-xHY0")
+      expect(result.videos.count).to eq(1)
     end
   end
 

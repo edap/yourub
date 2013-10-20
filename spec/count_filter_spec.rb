@@ -17,20 +17,20 @@ describe Yourub::CountFilter do
   }
 
   it "accept the video if satisfy the condition" do
-    count_filter = {'views' => ">= 100"}
-    res = Yourub::CountFilter.accept?(video, count_filter)
+    filter = {views: ">= 100"}
+    res = Yourub::CountFilter.accept?(video, filter)
     expect(res).to be_true
   end
 
   it "accept the video if filter is nil" do
-    count_filter = nil
-    res = Yourub::CountFilter.accept?(video, count_filter)
+    filter = nil
+    res = Yourub::CountFilter.accept?(video, filter)
     expect(res).to be_true
   end
 
   it "not accept the video if it does not satisfy the condition" do
-    count_filter = {'views' => "< 10"}
-    res = Yourub::CountFilter.accept?(video, count_filter)
+    filter = {views: "<= 100"}
+    res = Yourub::CountFilter.accept?(video, filter)
     expect(res).to be_false
   end
 

@@ -4,23 +4,31 @@ module Yourub
       attr_reader :videos, :nations, :categories
       attr_accessor :config
 
-      def initialize(nation: "US", category: 'all', max_results: 2, filter: nil)
+      def initialize(nation: "US", category: 'all', max_results: 2, video_id: nil, filter: nil)
         local_variables.each do |k|
           v = eval(k.to_s)
           instance_variable_set("@#{k}", v) unless v.nil?
         end
 
         valid?
-
+        @extended_video_info = false
         @categories, @videos = [], []
         @options = default_search_video_options
 
-        retrieve_categories
-        retrieve_videos
+        starting_search
       end
 
       def config
         Yourub::Config
+      end
+
+      def starting_search
+        unless @video_id.nil?
+          @extended_video_info = true
+          return video_info_request @video_id
+        end
+        retrieve_categories
+        retrieve_videos
       end
 
       NATIONS = [
@@ -92,8 +100,8 @@ module Yourub
           :regionCode      => @nation,
           :type            => 'video',
           :order           => 'date',
-          :safeSearch      => 'none',
-          :videoCategoryId => '10'
+          :safeSearch      => 'none'
+          #:videoCategoryId => '10'
         }
       end
 
@@ -131,12 +139,27 @@ module Yourub
       end
 
       def video_params(result_video_id)
-        fields = 'items(snippet(title,thumbnails),statistics(viewCount))'
         parameters = {
           :id => result_video_id,
-          :part => 'statistics,snippet',
-          :fields => URI::encode(fields)
+          :part => 'snippet,statistics',
         }
+        unless @extended_video_info
+          fields = 'items(snippet(title,thumbnails),statistics(viewCount))'
+          parameters[:fields] = URI::encode(fields)
+        end
+        return parameters
+      end
+
+      def add_video_to_search_result(entry, video_id)
+        if @extended_video_info
+          founded_video = entry
+        else
+          founded_video = {
+             'title' => entry['snippet']['title'],
+             'url' => 'https://www.youtube.com/watch?v='<< video_id
+          }
+        end
+         @videos.push(founded_video)
       end
 
       def store_video(video_id, video_response)
@@ -144,10 +167,7 @@ module Yourub
           result = JSON.parse(video_response.data.to_json)
           entry = result['items'].first
           if Yourub::CountFilter.accept?(entry, @filter)
-            @videos.push({
-               'title' => entry['snippet']['title'],
-               'url' => 'https://www.youtube.com/watch?v='<< video_id
-            })
+            add_video_to_search_result(entry, video_id)
           end
         rescue StandardError => e
           Yourub.logger.error "Error #{e} reading the video stream"

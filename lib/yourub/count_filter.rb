@@ -22,15 +22,15 @@ module Yourub
       end
 
       def validate_count_filter
-        count_number_invalid = (@filter['views'] =~ VIEWS_COUNT_NUMBER).nil?
-        operator_invalid = (@filter['views'] =~ ARITHMETIC_OPERATOR).nil?
+        count_number_invalid = (@filter[:views] =~ VIEWS_COUNT_NUMBER).nil?
+        operator_invalid = (@filter[:views] =~ ARITHMETIC_OPERATOR).nil?
         raise ArgumentError.new("arithmetic operator not detected") if operator_invalid
         raise ArgumentError.new("view count number not detected") if count_number_invalid
       end
 
       def apply_filter(video)
-        operator = @filter['views'].match(ARITHMETIC_OPERATOR).to_s
-        number_to_compare = @filter['views'].match(VIEWS_COUNT_NUMBER).to_s.to_i
+        operator = @filter[:views].match(ARITHMETIC_OPERATOR).to_s
+        number_to_compare = @filter[:views].match(VIEWS_COUNT_NUMBER).to_s.to_i
         number_founded = get_views_count(video)
         return number_founded.send(operator, number_to_compare)
       end

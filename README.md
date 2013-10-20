@@ -2,7 +2,7 @@
 
 # Yourub
 
-Yourub is a gem that finds the most recent videos from the Youtube API for the given nation, category and number of views. It's updated to the version 3 of the youtube api
+Yourub is a gem that parse the Youtube API. It is possible to look for a given nation, a category, a given video ID or searching by the of views. It's updated to the version 3 of the youtube api
 
 ## Installation
 
@@ -62,6 +62,10 @@ Or all the options together
 
     filter = {'views' => "<= 200"}
     Yourub::Search.new(nation: "FR", category: "Comedy", max_results: 25, filter: filter)
+
+To get all the available metatags for a single video, simply give the Youtube video id as parameter
+
+    Yourub::Search.new(video_id: "mN0Dbj-xHY0")
 
 ##TODO
 
