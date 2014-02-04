@@ -40,13 +40,10 @@
 	"buffers":
 	[
 		{
-			"contents": "module Yourub\n  class Page\n    include Logging\n\n    attr_accessor :url\n\n    def initialize(nation = \"US\", category = \"Sports\", type = \"most_recent\")\n      @nation          = nation\n      @category        = category\n      @type            = type\n      @api_url         = \"https://gdata.youtube.com/feeds/api/standardfeeds/\"\n      @json            = \"?v=2&alt=json&prettyprint=true\"\n      @required_fields = \"(title,media:group(media:player(@url)))\"\n      @url             = set_url\n    end\n\n    NATIONS = [\n      'AR','AU','AT','BE','BR','CA','CL','CO','CZ','EG','FR','DE','GB','HK',\n      'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',\n      'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']\n\n    CATEGORIES = [\n      'Comedy', 'People', 'Entertainment', 'Music', 'Howto',\n      'Sports', 'Autos', 'Education', 'Film', 'News', 'Animals',\n      'Tech', 'Travel','Games', 'Shortmov']\n\n    TYPES = [ \n      'top_rated', 'top_favorites', 'most_viewed', 'most_popular',\n      'most_recent', 'most_discussed', 'most_linked', 'most_responded',\n      'recently_featured', 'watch_on_mobile']      \n\n    def valid?\n      raise ArgumentError.new('params not available') unless(\n          NATIONS.include?(@nation) && \n          CATEGORIES.include?(@category) && \n          TYPES.include?(@type)\n        )\n      true\n    end\n\n    def is_alive?\n      begin\n        Net::HTTP.start(@url.host, @url.port,\n          :use_ssl => @url.scheme == 'https') do |https|\n          request = Net::HTTP::Get.new @url\n          response = https.request request\n          if response.code == \"200\"\n            return true\n          else\n            logger.error \"page #{@url} return code #{res.code}\"\n            return false\n          end\n        end\n      rescue StandardError => e\n        return false\n        logger.error \"Error #{e} trying to connect to the given url #{@url}\"       \n      end\n    end\n\n    def set_url\n      url = \"#{@api_url}#{@nation}/#{@type}_#{@category}#{@json}#{@required_fields}\"\n      @url = URI.parse(url)\n      return @url if (valid? && is_alive?)\n\n      # begin\n      #   valid?\n      #   is_alive?\n      #   puts @url\n      #   return @url\n      # rescue ArgumentError => e\n      #   return false\n      #   logger.error \"#{e}\"\n      # end\n    end\n\n    # TODO\n\n    # Va capito bene cosa e' un modulo e come si usa in una classe composta da diversi files\n    # http://stackoverflow.com/questions/151505/difference-between-a-class-and-a-module\n\n    # Gemme, due modi per organizzarle, il primo\n    # nel file lib/gemma.rb vengono inclusi tutti i sotto files.\n    # Ogninu di questi comincica con \n    # module NomeGemma e puo' includere classi o vattelapesca\n    # un esempio e' tire\n    # https://github.com/karmi/tire/blob/master/lib/tire.rb\n    # e rake\n    # https://github.com/jimweirich/rake/blob/master/lib/rake.rb\n\n    # oppure nel file lib/gemma.rb\n    # come in thor\n    # https://github.com/erikhuda/thor/blob/master/lib/thor.rb\n    # crei una classe col nome della gemma\n\n    # esempio piu' chiaro e' faraday\n    # https://github.com/lostisland/faraday/blob/master/lib/faraday.rb'\n    \n    # integrare un logger\n    # tire ha un logger https://github.com/karmi/tire/blob/master/lib/tire/logger.rb\n    # aggiungere diversi tipi di exception, far si che queste possano dialogre con la classe Logger\n    # unire i due metodi di sopra\n    # fare un test ciclando due url\n    # aggiungere le Exception, facendo si che il ciclo passi alla seconda ulr se la prima non passa\n\n    # pushare su github\n\n\n  end\nend",
-			"file": "lib/yourub/page.rb",
-			"file_size": 3554,
-			"file_write_time": 1378764534000000,
+			"file": "lib/yourub/search.rb",
 			"settings":
 			{
-				"buffer_size": 3553,
+				"buffer_size": 5048,
 				"line_ending": "Unix"
 			}
 		}
@@ -83,6 +80,7 @@
 	},
 	"file_history":
 	[
+		"/home/da/yourub/lib/yourub/page.rb",
 		"/home/da/iocose/Gemfile",
 		"/home/da/iocose/app/assets/stylesheets/application.css.scss",
 		"/home/da/iocose/config/environments/development.rb",
@@ -98,7 +96,6 @@
 		"/home/da/codebeispiel/mediumUF.txt",
 		"/home/da/yourub/lib/yourub.rb",
 		"/home/da/yourub/lib/yourub/logging.rb",
-		"/home/da/yourub/lib/yourub/page.rb",
 		"/home/da/yourub/lib/yourub/parser.rb",
 		"/home/da/yourub/spec/page_spec.rb",
 		"/home/da/yourub/spec/yourub_spec.rb",
@@ -240,18 +237,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "lib/yourub/page.rb",
+					"file": "lib/yourub/search.rb",
 					"settings":
 					{
-						"buffer_size": 3553,
+						"buffer_size": 5048,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								725,
-								512
+								4485,
+								4485
 							]
 						],
 						"settings":
@@ -261,7 +258,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 675.0,
+						"translation.y": 1980.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

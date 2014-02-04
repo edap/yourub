@@ -99,6 +99,7 @@ module Yourub
           :maxResults      => @max_results,
           :regionCode      => @nation,
           :type            => 'video',
+          :eventType       => 'completed',
           :order           => 'date',
           :safeSearch      => 'none'
           #:videoCategoryId => '10'
@@ -156,6 +157,7 @@ module Yourub
         else
           founded_video = {
              'title' => entry['snippet']['title'],
+             'thumb' => entry['snippet']['thumbnails']['default']['url'],
              'url' => 'https://www.youtube.com/watch?v='<< video_id
           }
         end

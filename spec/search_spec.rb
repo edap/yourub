@@ -13,11 +13,11 @@ describe Yourub::Search do
     #   expect(result.categories).to be_a_kind_of(Array)
     # end
 
-    it "return an error if the given country does not exists" do
+    it "return an error if the given country does not exist" do
       expect{ Yourub::Search.new(nation: "MOON") }.to raise_error(ArgumentError)
     end
 
-    it "return an error if the given category does not exists" do
+    it "return an error if the given category does not exist" do
       expect{ Yourub::Search.new(nation: "US", category: "Puzzles") }.to raise_error
     end
 
