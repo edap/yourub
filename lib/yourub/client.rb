@@ -36,6 +36,7 @@ module Yourub
 
     def search(criteria)
       begin
+        @videos = []
         @criteria = Yourub::Validator.confirm(criteria)
         search_by_criteria
       rescue ArgumentError => e
