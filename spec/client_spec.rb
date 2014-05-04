@@ -1,5 +1,4 @@
 require 'yourub'
-require 'byebug'
 
 describe Yourub::Client do
 
