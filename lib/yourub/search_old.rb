@@ -23,6 +23,7 @@ module Yourub
       end
 
       def starting_search
+        puts "now"
         unless @video_id.nil?
           @extended_video_info = true
           return video_info_request @video_id
@@ -76,6 +77,7 @@ module Yourub
 
       def retrieve_categories
         retrieve_all_categories
+        "find categories"
         if @category != 'all'
           retrieve_only_one_category
         end

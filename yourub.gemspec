@@ -10,8 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["lastexxit@gmail.com "]
   spec.description   = %q{Youtube API v3 parser}
   spec.summary       = %q{Yourub is a gem that fetch the most recent videos from
-                       the Youtube API for the given nation, category and number
-                       of views}
+                       the Youtube API for the given criteria}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -22,6 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "byebug"
   spec.add_development_dependency "google-api-client"
 
   spec.add_development_dependency "rspec", "~> 2.14"

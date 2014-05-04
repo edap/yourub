@@ -2,7 +2,7 @@
 *.rbc
 *.sublime-workspace
 .bundle
-.config
+.config/*
 .yardoc
 Gemfile.lock
 InstalledFiles
