@@ -32,10 +32,15 @@ If you are using rails, create a app/config/yourub.yml file as follow:
 
 ### Available parameters
 `:query` String, example `aliens`
+
 `:id` Sting, a valid youtube video id, example `NisCkxU544c`. If this parameter is set, tha others are ignored
+
 `:country` String, one or more alpha-2 country codes [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm), example `US` or `IT, DE`
+
 `:category` String, example `comedy`
+
 `:count_filters` Hash, example `{views: ">= 100"}` or `{views: "== 600"}`
+
 `:max_results` Integer, between 1 and 50
 
 It's necessary at least one of this parameters to start a search: `:country`, `:category`, `:query`, `:id`
