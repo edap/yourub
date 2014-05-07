@@ -9,8 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Davide Prati"]
   spec.email         = ["lastexxit@gmail.com "]
   spec.description   = %q{Youtube API v3 parser}
-  spec.summary       = %q{Yourub is a gem that fetch the most recent videos from
-                       the Youtube API for the given criteria}
+  spec.summary       = %q{Yourub is a gem that search videos on youtebe using the YouTube API v3}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -20,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "byebug"
-  spec.add_development_dependency "google-api-client"
+  spec.add_development_dependency "rake", "~> 10.1.0"
+  #spec.add_development_dependency "byebug"
+  spec.add_development_dependency "google-api-client" ,"~> 0.6.4"
 
   spec.add_development_dependency "rspec", "~> 2.14"
   spec.add_dependency "thor" , '~> 0.18'
