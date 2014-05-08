@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["lastexxit@gmail.com "]
   spec.description   = %q{Youtube API v3 parser}
   spec.summary       = %q{Yourub is a gem that search videos on youtebe using the YouTube API v3}
-  spec.homepage      = ""
+  spec.homepage      = "http://edapx.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
