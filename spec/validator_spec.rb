@@ -5,6 +5,14 @@ describe Yourub::Validator do
 
   context "passing an hash containing the search criteria" do
     context "with some valid criteria" do
+
+      context "no matter if the crteria has old 'key' => 'val' or key: val sintax" do
+        let(:criteria) { {"country" => 'US', "category" => 'Sport'} }
+        it "return criteria including nation but excluding the city" do
+          expect(subject).to eq({country: ['US'], category: 'Sport'})
+        end
+      end
+
       context "with valid nation but unknown parameter city" do
         let(:criteria) { {country: 'US', city: 'Berlin'} }
         it "return criteria including nation but excluding the city" do

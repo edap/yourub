@@ -1,7 +1,6 @@
 module Yourub
   module Validator
     class << self
-      #attr_reader :videos, :countrys, :categories
 
       DEFAULT_COUNTRY = "US" #if not given, a country it's necessary to retrieve a categories list
       COUNTRIES = [
@@ -13,8 +12,8 @@ module Yourub
       MINIMUM_PARAMS = [:country, :category, :query, :id]
 
       def confirm(criteria)
-        @criteria = criteria
-        valid_format?
+        valid_format?(criteria)
+        @criteria = symbolize_keys(criteria)
         remove_empty_and_non_valid_params
         minimum_param_present?
 
@@ -28,6 +27,21 @@ module Yourub
 
       def available_countries
         COUNTRIES
+      end
+
+      def symbolize_keys(hash)
+        hash.inject({}){|result, (key, value)|
+          new_key = case key
+                    when String then key.to_sym
+                    else key
+                    end
+          new_value = case value
+                      when Hash then symbolize_keys(value)
+                      else value
+                      end
+          result[new_key] = new_value
+          result
+        }
       end
 
       def remove_empty_and_non_valid_params
@@ -61,10 +75,10 @@ module Yourub
         return categories
       end
 
-      def valid_format?
+      def valid_format?(criteria)
         raise ArgumentError.new(
           "give an hash as search criteria"
-        ) unless( @criteria.is_a? Hash )
+        ) unless( criteria.is_a? Hash )
       end
 
       def minimum_param_present?  
