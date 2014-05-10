@@ -11,7 +11,7 @@ module Yourub
         :part            => 'snippet',
         :type            => 'video',
         :eventType       => 'completed',
-        :order           => 'date',
+        :order           => 'relevance',
         :safeSearch      => 'none',
       }
     end
@@ -140,6 +140,7 @@ module Yourub
     end
 
     def search_list_request(options)
+      byebug
       search_response = client.execute!(
         :api_method => youtube.search.list, 
         :parameters => options

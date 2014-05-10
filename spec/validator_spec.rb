@@ -8,7 +8,7 @@ describe Yourub::Validator do
 
       context "no matter if the crteria has old 'key' => 'val' or key: val sintax" do
         let(:criteria) { {"country" => 'US', "category" => 'Sport'} }
-        it "return criteria including nation but excluding the city" do
+        it "return the criteria in the sym: val format" do
           expect(subject).to eq({country: ['US'], category: 'Sport'})
         end
       end
@@ -17,6 +17,13 @@ describe Yourub::Validator do
         let(:criteria) { {country: 'US', city: 'Berlin'} }
         it "return criteria including nation but excluding the city" do
           expect(subject).to eq({country: ['US']})
+        end
+      end
+
+      context "with an invalid :order value" do
+        let(:criteria) { {order: 'banane', query: 'roberto baggio'} }
+        it 'raise an argument error' do
+          expect(lambda{subject}).to raise_error(ArgumentError)
         end
       end
 

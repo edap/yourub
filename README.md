@@ -43,14 +43,16 @@ If you are using rails, create a app/config/yourub.yml file as follow:
 
 `:max_results` Integer, between 1 and 50
 
+`:order` String, one of these: 'date', 'rating', 'relevance', 'title', 'videocount', 'viewcount'. The default one is `'relevance'`
+
 It's necessary at least one of this parameters to start a search: `:country`, `:category`, `:query`, `:id`
  
 ### Examples
 
-For example, to find videos in the category "sports" in the country "de"
+For example, to find the most recent videos in the category "sports" in Germany
 ```ruby
 client = Yourub::Client.new
-client.search(country: "DE", category: "sports")
+client.search(country: "DE", category: "sports", order: 'date')
 client.videos
 ```
 
@@ -88,7 +90,6 @@ It will give you much more information
 ##TODO
 
 1. adding a CLI
-2. add `:order` in the search criteria
 
 ## Contributing
 

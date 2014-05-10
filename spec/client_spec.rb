@@ -27,6 +27,11 @@ describe Yourub::Client do
       expect(subject.videos).to be_a_kind_of(Array)
     end
 
+    it "accept an 'order' parameter within the others" do
+      subject.search(country: "US", category: "Sports", order: 'date')
+      expect(subject.videos).to be_a_kind_of(Array)
+    end
+
     it "retrieves 5 videos for each given category" do
       subject.search(country: "US, DE", category: "Sports", max_results: 5)
       expect(subject.videos.count).to eq(10)

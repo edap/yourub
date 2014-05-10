@@ -2,31 +2,28 @@ module Yourub
   module Validator
     class << self
 
-      DEFAULT_COUNTRY = "US" #if not given, a country it's necessary to retrieve a categories list
-      COUNTRIES = [
-        'AR','AU','AT','BE','BR','CA','CL','CO','CZ','EG','FR','DE','GB','HK',
-        'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',
-        'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']
-
-      VALID_PARAMS   = [:country, :category, :query, :id, :max_results, :count_filter]
-      MINIMUM_PARAMS = [:country, :category, :query, :id]
+      DEFAULT_COUNTRY = "US"
+      COUNTRIES       = [ 'AR','AU','AT','BE','BR','CA','CL','CO','CZ','EG','FR','DE','GB','HK',
+                          'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',
+                          'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']
+      ORDERS          = ['date', 'rating', 'relevance', 'title', 'videocount', 'viewcount']
+      VALID_PARAMS    = [:country, :category, :query, :id, :max_results, :count_filter, :order]
+      MINIMUM_PARAMS  = [:country, :category, :query, :id]
 
       def confirm(criteria)
         valid_format?(criteria)
         @criteria = symbolize_keys(criteria)
+
         remove_empty_and_non_valid_params
         minimum_param_present?
 
         keep_only_the_id_if_present
+        validate_order
         countries_to_array
         add_default_country_if_category_is_present
         validate_countries
 
         @criteria
-      end
-
-      def available_countries
-        COUNTRIES
       end
 
       def symbolize_keys(hash)
@@ -89,6 +86,14 @@ module Yourub
         end
       end
 
+      def validate_order
+        if @criteria.has_key? :order
+          raise ArgumentError.new(
+            "the given order is not in the available ones: #{ORDERS.join(',')}"
+          ) unless( ORDERS.include? @criteria[:order] )    
+        end
+      end
+
       def validate_countries
         if @criteria.has_key? :country
           raise ArgumentError.new(
@@ -105,6 +110,9 @@ module Yourub
         )
       end
 
+      def available_countries
+        COUNTRIES
+      end
     end
   end
 end
