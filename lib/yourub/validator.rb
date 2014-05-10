@@ -26,6 +26,10 @@ module Yourub
         @criteria
       end
 
+      def available_countries
+        COUNTRIES
+      end
+
       def remove_empty_and_non_valid_params
         @criteria.keep_if{|k,v| ( (VALID_PARAMS.include? k) && (v.size > 0)) }
       end

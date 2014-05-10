@@ -10,6 +10,10 @@ describe Yourub::Client do
       expect(lambda{subject}).not_to raise_error()
     end
 
+    it "give me a list of valid countries" do
+      expect(subject.countries).to be_a_kind_of(Array)
+    end
+
     it "retrieves more infos with the option extended_info = true" do
       filter = {views: ">= 100"}
       subject.extended_info = true

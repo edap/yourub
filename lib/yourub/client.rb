@@ -20,6 +20,10 @@ module Yourub
       Yourub::Config
     end
 
+    def countries
+      Yourub::Validator.available_countries
+    end
+
     def client
       @client ||= Google::APIClient.new(
         :key => config.developer_key,
