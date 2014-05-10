@@ -21,14 +21,24 @@ Or install it yourself as:
 
 Get a developer key as explained [here](http://www.youtube.com/watch?v=Im69kzhpR3I)
 If you are using rails, create a app/config/yourub.yml file as follow:
+```
+yourub_defaults: &yourub_defaults
+  developer_key: 'YoUrDevEl0PerKey'
+  youtube_api_service_name: 'youtube'
+  youtube_api_version: 'v3'
+  application_name: "yourub"
+  application_version: "0.1"
+  log_level: WARN
 
-    yourub:
-      developer_key: 'yourdeveloperkey'
-      youtube_api_service_name: 'youtube'
-      youtube_api_version: 'v3'
-      application_name: "nameofyourapp"
-      application_version: "version_number_of_your_app"
-      log_level: WARN
+development:
+  <<: *yourub_defaults
+
+production:
+  <<: *yourub_defaults
+
+test:
+  <<: *yourub_defaults
+```
 
 ### Available parameters
 `:query` String, example `aliens`
