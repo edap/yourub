@@ -140,7 +140,6 @@ module Yourub
     end
 
     def search_list_request(options)
-      byebug
       search_response = client.execute!(
         :api_method => youtube.search.list, 
         :parameters => options
