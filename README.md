@@ -49,7 +49,7 @@ test:
 
 `:category` String, example `comedy`
 
-`:count_filters` Hash, example `{views: ">= 100"}` or `{views: "== 600"}`
+`:count_filter` Hash, example `{views: ">= 100"}` or `{views: "== 600"}`
 
 `:max_results` Integer, between 1 and 50
 
