@@ -37,6 +37,11 @@ describe Yourub::Client do
       expect(subject.videos.count).to eq(10)
     end
 
+    it "retrieves 5 videos for each given category, also if they are passed as array" do
+      subject.search(country: ["US", "DE"], category: "Sports", max_results: 5)
+      expect(subject.videos.count).to eq(10)
+    end
+
     it "retrieves the given number of video for the given category" do
       subject.search(category: "Sports", max_results: 2)
       expect(subject.videos.count).to eq(2)

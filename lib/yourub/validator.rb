@@ -53,7 +53,10 @@ module Yourub
 
       def countries_to_array
         if @criteria.has_key? :country
-          @criteria[:country] = @criteria[:country].split(',').collect(&:strip)
+          if @criteria[:country].is_a?(String)
+            @criteria[:country] = @criteria[:country].split(',').collect(&:strip)
+          end
+          @criteria[:country] = @criteria[:country].to_a
         end
       end
 
@@ -98,7 +101,7 @@ module Yourub
         if @criteria.has_key? :country
           raise ArgumentError.new(
             "the given country is not in the available ones: #{COUNTRIES.join(',')}"
-          ) unless( (@criteria[:country] & COUNTRIES).size > 0 )
+          ) unless( (@criteria[:country] - COUNTRIES).size == 0 )
         end
       end
 
