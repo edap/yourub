@@ -22,6 +22,7 @@ module Yourub
         countries_to_array
         add_default_country_if_category_is_present
         validate_countries
+        set_filter_count_options
 
         @criteria
       end
@@ -66,7 +67,14 @@ module Yourub
         end
       end
 
+      def set_filter_count_options
+        if @criteria.has_key? :count_filter
+          Yourub::CountFilter.filter = @criteria.delete(:count_filter)
+        end
+      end
+
       def valid_category(categories, selected_category)
+        #if selected_category == 'all' return categories
         categories = categories.select {|k| k.has_value?(selected_category.downcase)}
         if categories.first.nil?
           raise ArgumentError.new(
@@ -109,7 +117,7 @@ module Yourub
         raise ArgumentError.new(
           'max 50 videos pro categories or country'
         ) unless(
-          @criteria[:max_results].to_i < 50 || @criteria[:max_results].to_i == 0
+          @criteria[:max_results].to_i < 51 || @criteria[:max_results].to_i == 0
         )
       end
 

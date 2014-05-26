@@ -7,8 +7,7 @@ module Yourub
       VIEWS_COUNT_NUMBER = /\d*\z/
       ARITHMETIC_OPERATOR = /\A<(?!=)|>(?!=)|<=|>=|==|!=/
 
-      def accept?(entry, filter)
-        @filter = filter
+      def accept?(entry)
         return true if @filter.nil?
         validate_filter
         apply_filter(entry)

@@ -7,6 +7,7 @@ module Yourub
     def initialize()
       @extended_info = false
       @categories, @videos = [], []
+      @count_filter = {}
       @api_options= {
         :part            => 'snippet',
         :type            => 'video',
@@ -97,7 +98,7 @@ module Yourub
     def retrieve_videos
       consume_criteria do |criteria|
         req = search_list_request(criteria)
-        if @extended_info || @criteria[:count_filter]
+        if @extended_info || Yourub::CountFilter.filter
           get_details_and_store req
         else
           videos = Yourub::Reader.parse_videos(req)
@@ -175,7 +176,7 @@ module Yourub
 
     def add_video_to_search_result(entry)
       video = @extended_info ? entry : Yourub::Reader.parse_entry(entry)
-      if Yourub::CountFilter.accept?(entry, @criteria[:count_filter])
+      if Yourub::CountFilter.accept?(entry)
         @videos.push(video)
       end
     end
