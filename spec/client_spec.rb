@@ -67,6 +67,10 @@ describe Yourub::Client do
       expect(subject.videos.first["id"]).to eql("mN0Dbj-xHY0")
     end
 
+    it "retrieves the view count for given id" do
+      expect(subject.get_views("mN0Dbj-xHY0")).to be_a_kind_of(Integer)
+    end
+
     it "return nil for a not existing video" do
       subject.search(id: "fffffffffffffffffffff")
       expect(subject.videos).to be_empty

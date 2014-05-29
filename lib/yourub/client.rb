@@ -189,5 +189,14 @@ module Yourub
       return name.gsub("/", "-").downcase.gsub(/\s+/, "")
     end
 
+    def get_views(id)
+      request = client.execute!(
+        :api_method => youtube.videos.list,
+        :parameters => {:id => id, :part => 'statistics'}
+      )
+      v = Yourub::Reader.parse_videos(request)
+      v ? Yourub::CountFilter.get_views_count(v.first) : nil
+    end
+
   end
 end
