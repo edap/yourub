@@ -2,7 +2,9 @@ module Yourub
   module Reader
     class << self
       def parse_videos(videos)
-        JSON.parse(videos.data.to_json)['items']
+        res = JSON.parse(videos.data.to_json)['items']
+        return nil if res.blank?
+        res
       end
 
       def parse_entry(entry)

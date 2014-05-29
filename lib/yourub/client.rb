@@ -68,8 +68,8 @@ module Yourub
         :api_method => youtube.videos.list,
         :parameters => params
       )
-      entry = Yourub::Reader.parse_videos(video_response).first
-      add_video_to_search_result(entry) unless entry.nil?
+      entry = Yourub::Reader.parse_videos(video_response)
+      add_video_to_search_result(entry.first) unless entry.nil?
     end
 
     def merge_criteria_with_api_options
@@ -97,12 +97,16 @@ module Yourub
 
     def retrieve_videos
       consume_criteria do |criteria|
-        req = search_list_request(criteria)
-        if @extended_info || Yourub::CountFilter.filter
-          get_details_and_store req
-        else
-          videos = Yourub::Reader.parse_videos(req)
-          videos.each{|v| add_video_to_search_result(v) }
+        begin
+          req = search_list_request(criteria)
+          if @extended_info || Yourub::CountFilter.filter
+            get_details_and_store req
+          else
+            videos = Yourub::Reader.parse_videos(req)
+            videos.each{ |v| add_video_to_search_result(v) }
+          end
+        rescue StandardError => e
+          Yourub.logger.error "Error #{e} retrieving videos for the criteria: #{criteria.to_s}"
         end
       end
     end
@@ -135,8 +139,8 @@ module Yourub
     def get_details_and_store(video_list)
       video_list.data.items.each do |video_item|
         v = videos_list_request video_item.id.videoId
-        v = Yourub::Reader.parse_videos(v).first
-        add_video_to_search_result(v)
+        v = Yourub::Reader.parse_videos(v)
+        add_video_to_search_result(v.first) if v
       end
     end
 
