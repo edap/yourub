@@ -1,3 +1,4 @@
+require 'byebug'
 require 'yourub'
 
 describe Yourub::Client do
@@ -24,12 +25,17 @@ describe Yourub::Client do
     it "retrieves videos that have more than 100 views" do
       filter = {views: ">= 100"}
       subject.search(country: "US", category: "Sports", count_filter: filter)
-      expect(subject.videos).to be_a_kind_of(Array)
+      expect(subject.videos).to_not be_empty
+    end
+
+    it "retrieves videos for all the categories" do
+      subject.search(country: "US", category: "all")
+      expect(subject.videos).to_not be_empty
     end
 
     it "accept an 'order' parameter within the others" do
       subject.search(country: "US", category: "Sports", order: 'date')
-      expect(subject.videos).to be_a_kind_of(Array)
+      expect(subject.videos).to_not be_empty
     end
 
     it "retrieves 5 videos for each given category" do

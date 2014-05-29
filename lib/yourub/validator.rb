@@ -74,7 +74,7 @@ module Yourub
       end
 
       def valid_category(categories, selected_category)
-        #if selected_category == 'all' return categories
+        return categories if selected_category == 'all'
         categories = categories.select {|k| k.has_value?(selected_category.downcase)}
         if categories.first.nil?
           raise ArgumentError.new(

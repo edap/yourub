@@ -45,9 +45,9 @@ test:
 
 `:id` Sting, a valid youtube video id, example `NisCkxU544c`. If this parameter is set, tha others are ignored
 
-`:country` String, one or more alpha-2 country codes [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm), example `US` or `IT, DE`
+`:country` String, one or more alpha-2 country codes [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm), example `US` or `IT, DE`. The default one is `US`
 
-`:category` String, example `comedy`
+`:category` String, example `comedy`. It accept the wildcard `all`, that retrieves videos for all the category for the given nation, or the default one (US) if no one is given
 
 `:count_filter` Hash, example `{views: ">= 100"}` or `{views: "== 600"}`
 
