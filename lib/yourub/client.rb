@@ -11,7 +11,6 @@ module Yourub
       @api_options= {
         :part            => 'snippet',
         :type            => 'video',
-        :eventType       => 'completed',
         :order           => 'relevance',
         :safeSearch      => 'none',
       }
