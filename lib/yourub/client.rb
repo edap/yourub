@@ -9,6 +9,9 @@ module Yourub
     attr_accessor :config
 
     def initialize()
+      # here you could accept an hash as argument, in order
+      # to initialize te client in a CLI, and override later the value
+      # if a config file is present
       args = {
         :key => config.developer_key,
         :application_name => config.application_name,

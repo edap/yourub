@@ -1,11 +1,100 @@
 require 'yourub'
-#require 'byebug'
+require 'byebug'
+require 'signet/oauth_1/client'
+require_relative '../connection_helper'
 #require_relative '../spec_helper'
 
 describe Yourub::Client do
+  include ConnectionHelpers
 
   context "on initialize" do
     let(:subject) { Yourub::Client.new }
+    let(:client) { Yourub::Client.new() }
+
+
+
+ describe 'when executing requests' do
+    before do
+      @prediction = client.discovered_api('prediction', 'v1.2')
+      @youtube_api = client.discovered_api('youtube', 'v3')
+      client.authorization = :oauth_2
+      @connection = stub_connection do |stub|
+        stub.post('/prediction/v1.2/training?data=12345') do |env|
+          expect(env[:request_headers]['Authorization']).to eq('Bearer 12345')
+          [200, {}, '{}']
+        end
+      end
+    end
+
+    after do
+      @connection.verify
+    end
+    
+    it 'should use default authorization' do
+      client.authorization.access_token = "12345"
+      client.execute(  
+        :api_method => @prediction.training.insert,
+        :parameters => {'data' => '12345'},
+        :connection => @connection
+      )
+    end
+
+    it 'should use request scoped authorization when provided' do
+      client.authorization.access_token = "abcdef"
+      new_auth = Signet::OAuth2::Client.new(:access_token => '12345')
+      client.execute(  
+        :api_method => @prediction.training.insert,
+        :parameters => {'data' => '12345'},
+        :authorization => new_auth,
+        :connection => @connection
+      )
+    end
+    
+    it 'should accept options with batch/request style execute' do
+      client.authorization.access_token = "abcdef"
+      new_auth = Signet::OAuth2::Client.new(:access_token => '12345')
+      request = client.generate_request(
+        :api_method => @prediction.training.insert,
+        :parameters => {'data' => '12345'}
+      )
+      client.execute(
+        request,
+        :authorization => new_auth,
+        :connection => @connection
+      )
+    end
+end
+
+
+
+
+
+  describe 'configured for OAuth 1' do
+    before do
+      client.authorization = :oauth_1
+      client.authorization.token_credential_key = 'abc'
+      client.authorization.token_credential_secret = '123'
+    end
+
+    it 'should use the default OAuth1 client configuration' do
+byebug
+      expect(client.authorization.temporary_credential_uri.to_s).to eq(
+        'https://www.google.com/accounts/OAuthGetRequestToken'
+      )
+      expect(client.authorization.authorization_uri.to_s).to include(
+        'https://www.google.com/accounts/OAuthAuthorizeToken'
+      )
+      expect(client.authorization.token_credential_uri.to_s).to eq(
+        'https://www.google.com/accounts/OAuthGetAccessToken'
+      )
+      expect(client.authorization.client_credential_key).to eq('anonymous')
+      expect(client.authorization.client_credential_secret).to eq('anonymous')
+    end
+
+    #it_should_behave_like 'configurable user agent'
+  end
+
+
 
     it "return an error if the given country does not exist" do
       subject.search(country: "MOON")
@@ -17,6 +106,7 @@ describe Yourub::Client do
     end
 
     it "retrieves more infos with the option" do
+      byebug 
       filter = {views: ">= 100"}
       subject.search(country: "US", category: "Sports", count_filter: filter, extended_info: true)
       expect(subject.videos.first.has_key? "statistics").to be_true
