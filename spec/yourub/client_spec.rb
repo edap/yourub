@@ -16,7 +16,7 @@ describe Yourub::Client do
       expect(subject.countries).to be_a_kind_of(Array)
     end
 
-    it "retrieves more infos with the option", focus:true do
+    it "retrieves more infos with the option" do
       filter = {views: ">= 100"}
       subject.search(country: "US", category: "Sports", count_filter: filter, extended_info: true)
       expect(subject.videos.first.has_key? "statistics").to be_true
