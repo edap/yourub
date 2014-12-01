@@ -9,7 +9,7 @@ module Yourub
 
       def parse_entry(entry)
         video_id = entry["id"]["videoId"] || entry['id']
-        founded_video = {
+        {
            'id'    => video_id,
            'title' => entry['snippet']['title'],
            'thumb' => entry['snippet']['thumbnails']['default']['url'],
