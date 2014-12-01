@@ -73,39 +73,33 @@ client = Yourub::Client.new
 client.search(query: "aliens")
 client.videos
 ```
-
-### Extend Info
-As default Yourub will give you back few values, example:
-
-```ruby
-client = Yourub::Client.new
-client.search(id: "mN0Dbj-xHY0")
-```
-will report id, title, the default thumb, and the url where you can watch the video
-```
-[{"id"=>"mN0Dbj-xHY0", "title"=>"GoPro: Hiero Day", "thumb"=>"https://i1.ytimg.com/vi/mN0Dbj-xHY0/default.jpg", "url"=>"https://www.youtube.com/watch?v=mN0Dbj-xHY0"}]
-```
-
-To have more values back, use the option `extended_info`
-```ruby
-client = Yourub::Client.new
-client.extended_info = true
-client.search(id: "NisCkxU544c")
-```
-It will give you much more information
+that is the content of the response:
 ```
 [{"kind"=>"youtube#video", "etag"=>"\"N5Eg36Gl054SUNiWWc-Su3t5O-k/U6AzLXvcnZt2WFqpnq9_dksV7DA\"", "id"=>"NisCkxU544c", "snippet"=>{"publishedAt"=>"2009-04-05T05:20:10.000Z", "channelId"=>"UCCHcEUksSVKsRDH86j77Ntg", "title"=>"Like A Boss (ft. Seth Rogen) - Uncensored Version", "description"=>"http://www.itunes.com/thelonelyisland\r\n\r\nThe new single from The Lonely Island's debut album \"INCREDIBAD\" In stores now!\r\n\r\nFeaturing Seth Rogen.\r\n\r\nThe Lonely Island is Andy Samberg, Akiva Schaffer & Jorma Taccone.", "thumbnails"=>{"default"=>{"url"=>"https://i1.ytimg.com/vi/NisCkxU544c/default.jpg", "width"=>120, "height"=>90}, "medium"=>{"url"=>"https://i1.ytimg.com/vi/NisCkxU544c/mqdefault.jpg", "width"=>320, "height"=>180}, "high"=>{"url"=>"https://i1.ytimg.com/vi/NisCkxU544c/hqdefault.jpg", "width"=>480, "height"=>360}, "standard"=>{"url"=>"https://i1.ytimg.com/vi/NisCkxU544c/sddefault.jpg", "width"=>640, "height"=>480}, "maxres"=>{"url"=>"https://i1.ytimg.com/vi/NisCkxU544c/maxresdefault.jpg", "width"=>1280, "height"=>720}}, "channelTitle"=>"thelonelyisland", "categoryId"=>"23", "liveBroadcastContent"=>"none"}, "statistics"=>{"viewCount"=>"120176425", "likeCount"=>"594592", "dislikeCount"=>"15121", "favoriteCount"=>"0", "commentCount"=>"208109"}}]
 ```
 
-To simply get the number of views for a given video, use `get_views`
+### Methods
+`search`, search youtube videos for the given parameters
+```ruby
+client = Yourub::Client.new
+client.search(id: "NisCkxU544c")
+```
+
+`get_views`
+retrieves the number of views for the given videos id
 ```ruby
 client = Yourub::Client.new
 client.get_views("G2b0OIkTraI")
 ```
 
+
+To have more values back, use the option `extended_info`
 ##TODO
 
 1. adding a CLI
+2. the result should be yield, and not saved in an instance variable
+3. replace GoogleApiClient
+4. Implementing playlist
 
 ## Contributing
 

@@ -7,7 +7,7 @@ module Yourub
                           'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',
                           'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']
       ORDERS          = ['date', 'rating', 'relevance', 'title', 'videoCount', 'viewCount']
-      VALID_PARAMS    = [:country, :category, :query, :id, :max_results, :count_filter, :order]
+      VALID_PARAMS    = [:country, :category, :query, :id, :max_results, :count_filter, :order ]
       MINIMUM_PARAMS  = [:country, :category, :query, :id]
 
       def confirm(criteria)
@@ -43,7 +43,7 @@ module Yourub
       end
 
       def remove_empty_and_non_valid_params
-        @criteria.keep_if{|k,v| ( (VALID_PARAMS.include? k) && (v.size > 0)) }
+        @criteria.keep_if{|k,v| ( (VALID_PARAMS.include? k) && v.size > 0) }
       end
 
       def keep_only_the_id_if_present
