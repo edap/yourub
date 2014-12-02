@@ -70,6 +70,7 @@ module Yourub
         consume_criteria do |criteria|
           begin
             req = search_list_request(criteria)
+            #byebug
             get_details_and_store req
           rescue StandardError => e
             Yourub.logger.error "Error #{e} retrieving videos for the criteria: #{criteria.to_s}"

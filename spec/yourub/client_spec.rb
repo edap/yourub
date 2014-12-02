@@ -27,7 +27,7 @@ describe Yourub::Client do
     end
 
     after do
-      @connection.verify
+      #@connection.verify
     end
     
     it 'should use default authorization' do
@@ -37,6 +37,16 @@ describe Yourub::Client do
         :parameters => {'data' => '12345'},
         :connection => @connection
       )
+    end
+
+    it 'returns categories list' do
+      param = {"part" => "snippet","regionCode" => "de" }
+      fake_struct = OpenStruct.new(data: "bla", status: 200)
+      # TODO, stubbing initialization params, create an helper for te struct
+      # allow(Yourub::REST::Request).to receive(:new).with({client: client, resource:"video_categories", method: "list", p: param}).and_return fake_struct
+      allow(Yourub::REST::Request).to receive(:new).and_return fake_struct
+      client.search(country: "US", category: "Sports")
+      expect(client.videos.first.has_key? "statistics").to be true
     end
 
     it 'should use request scoped authorization when provided' do
@@ -109,7 +119,7 @@ byebug
       byebug 
       filter = {views: ">= 100"}
       subject.search(country: "US", category: "Sports", count_filter: filter, extended_info: true)
-      expect(subject.videos.first.has_key? "statistics").to be_true
+      expect(subject.videos.first.has_key? "statistics").to be true
     end   
 
     it "retrieves videos that have more than 100 views" do

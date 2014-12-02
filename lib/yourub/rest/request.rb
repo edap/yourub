@@ -9,6 +9,7 @@ module Yourub
       # @param params [Hash]
       # @return [Youtube::Request]
       def initialize(client, resource_type, method, params)
+        byebug
         @client = client 
         @resource_type = resource_type
         @method = method
