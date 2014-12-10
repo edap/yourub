@@ -12,15 +12,15 @@ module Yourub
         byebug
         @client = client 
         @resource_type = resource_type
-        @method = method
-        @params = params
-        perform
+        #@method = method
+        #@params = params
+        perform(method, params)
       end
 
-      def perform
+      def perform(method, params)
         r = @client.execute!(
-          :api_method => @client.youtube_api.send(@resource_type.to_sym).send(@method.to_sym),
-          :parameters => @params
+          :api_method => @client.youtube_api.send(@resource_type.to_sym).send(method.to_sym),
+          :parameters => params
         )    
         @data = r.data
         @status = r.status
