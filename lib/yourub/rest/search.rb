@@ -125,7 +125,6 @@ module Yourub
       end
 
       def send_request(resource_type, method, params)
-        #byebug
         Yourub::REST::Request.new(self, resource_type, method, params)
       end
 
