@@ -1,6 +1,7 @@
 *.gem
 *.rbc
 *.sublime-workspace
+spec/yourub/integration_spec.rb
 .bundle
 .config/*
 .yardoc

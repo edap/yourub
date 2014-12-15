@@ -3,7 +3,12 @@ require 'yourub/rest/request'
 module Yourub
   module REST
     module Search
-         
+      # Search through the youtube API, executing multiple queries where necessary
+      # @param criteria [Hash]
+      # @example
+      #   client = Yourub::Client.new
+      #   client.search(country: "DE", category: "sports", order: 'date')   
+
       def search(criteria)
         begin
           @api_options= {
@@ -21,7 +26,20 @@ module Yourub
           Yourub.logger.error "#{e}"
         end
       end
+      
+      # return the number of times a video was watched
+      # @param video_id[Integer]
+      # @example
+      #   client = Yourub::Client.new
+      #   client.get_views("G2b0OIkTraI")
+      def get_views(video_id)
+        params = {:id => id, :part => 'statistics'}
+        request = videos_list_request(params)
+        v = Yourub::Reader.parse_videos(request)
+        v ? Yourub::CountFilter.get_views_count(v.first) : nil
+      end
 
+private
       def search_by_criteria
         if @criteria.has_key? :id
           search_by_id
@@ -145,13 +163,6 @@ module Yourub
 
       def parse_name(name)
         return name.gsub("/", "-").downcase.gsub(/\s+/, "")
-      end
-
-      def get_views(id)
-        params = {:id => id, :part => 'statistics'}
-        request = videos_list_request(params)
-        v = Yourub::Reader.parse_videos(request)
-        v ? Yourub::CountFilter.get_views_count(v.first) : nil
       end
 
     end

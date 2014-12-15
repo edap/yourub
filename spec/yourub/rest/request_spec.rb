@@ -1,9 +1,8 @@
 require 'yourub'
 require 'byebug'
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 
 describe Yourub::REST::Request do
-  #include ConnectionHelpers
 
   context "during requests initialization" do
     let(:client) { Yourub::Client.new() }
