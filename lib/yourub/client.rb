@@ -7,13 +7,14 @@ module Yourub
 
     attr_reader :videos
 
-    # The Yourub::Client is a subclass of the Google::APIClient
+    # The Yourub::Client is a subclass of the Google::APIClient.
+    #
     # @see http://www.rubydoc.info/github/google/google-api-ruby-client/Google/APIClient
     # In order to initialize the client, you have either to provide
     # a configuration file 'config/yourub.yml' in your main application folder
-    # or to pass an hash in the initialization
+    # or to pass an hash in the initialization.
     # @example
-    #   
+    #    #passing an hash 
     #    options = { developer_key: "a_secret_key",
     #                application_name: "my_app", 
     #                application_version: 2.0, 
@@ -24,7 +25,9 @@ module Yourub
     # mandatory value is the developer_key
     #   
     # @example 
-    #   client = Yourub::Client.new({developer_key: "a_secret_key"})
+    #   #assuming that you have a file in config/yourub.yml (see the example in
+    #   #the source repository)
+    #   client = Yourub::Client.new()
 
     def initialize(options = {})
       unless options.empty?

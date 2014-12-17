@@ -4,7 +4,6 @@ require 'yourub'
 
 describe Yourub::Client do
 
-
   it "initialize a client through the config file" do
     Yourub::Config.stub(:developer_key).and_return('secret')
     Yourub::Config.stub(:application_name).and_return('youtube')
@@ -17,10 +16,10 @@ describe Yourub::Client do
   end
 
   it "initialize the client accepting an hash of option" do
-      options = {developer_key: "Super",
-                 application_name: "yourub", 
-                 application_version: 2.0, 
-                 log_level: 3}
+      options = { developer_key: "Super",
+                  application_name: "yourub", 
+                  application_version: 2.0, 
+                  log_level: 3 }
 
       client = Yourub::Client.new(options)
       expect(client.config.developer_key).to eq('Super')
@@ -34,10 +33,7 @@ describe Yourub::Client do
      expect(client.config.log_level).to eq("WARN")
   end
 
-  it "does not raise an argument error if a config file is not present" do
-  end
-
-  it "raise an argument error if there is no way to obtain config infos" do
+  it "raise an argument error if there is no a developer_key value in the hash option" do
     options = {application_name: 'my app'}
     expect(lambda{Yourub::Client.new(options)}).to raise_error(ArgumentError)
   end
