@@ -6,15 +6,31 @@ module Yourub
     include Yourub::REST::API
 
     attr_reader :videos
-    #attr_accessor :config
 
     # The Yourub::Client is a subclass of the Google::APIClient
     # @see http://www.rubydoc.info/github/google/google-api-ruby-client/Google/APIClient
+    # In order to initialize the client, you have either to provide
+    # a configuration file 'config/yourub.yml' in your main application folder
+    # or to pass an hash in the initialization
+    # @example
+    #   
+    #    options = { developer_key: "a_secret_key",
+    #                application_name: "my_app", 
+    #                application_version: 2.0, 
+    #                log_level: "INFO"}
+    #    client = Yourub::Client.new(options)
+    #
+    # If you don't provide all the values, default values will be used.The only
+    # mandatory value is the developer_key
+    #   
+    # @example 
+    #   client = Yourub::Client.new({developer_key: "a_secret_key"})
 
-    def initialize()
-      # here you could accept an hash as argument, in order
-      # to initialize te client in a CLI, and override later the value
-      # if a config file is present
+    def initialize(options = {})
+      unless options.empty?
+        Yourub::Config.override_config_file(options) 
+      end
+      
       args = {
         :key => config.developer_key,
         :application_name => config.application_name,
@@ -36,7 +52,6 @@ module Yourub
         config.youtube_api_version)
     end
 
-private
     def config
       Yourub::Config
     end
