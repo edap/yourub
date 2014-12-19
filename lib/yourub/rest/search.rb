@@ -21,7 +21,9 @@ module Yourub
           @categories, @videos = [], []
           @count_filter = {}
           @criteria = Yourub::Validator.confirm(criteria)
-          search_by_criteria
+          search_by_criteria do |result|
+            yield result
+          end
         rescue ArgumentError => e
           Yourub.logger.error "#{e}"
         end
@@ -46,7 +48,9 @@ private
         else
           merge_criteria_with_api_options
           retrieve_categories
-          retrieve_videos
+          retrieve_videos do |res|
+            yield res
+          end
         end
       end
 
@@ -88,8 +92,9 @@ private
         consume_criteria do |criteria|
           begin
             req = search_list_request(criteria)
-            #byebug
-            get_details_and_store req
+            get_details_for_each_video(req) do |v|
+              yield v
+            end
           rescue StandardError => e
             Yourub.logger.error "Error #{e} retrieving videos for the criteria: #{criteria.to_s}"
           end
@@ -121,14 +126,28 @@ private
         end    
       end
 
-      def get_details_and_store(video_list)
+#       def get_details_and_store(video_list)
+#         video_list.data.items.each do |video_item|
+#           params = video_params(video_item.id.videoId)
+#           v = videos_list_request(params) 
+#           v = Yourub::Reader.parse_videos(v)
+#           add_video_to_search_result(v.first) if v
+#         end
+#       end
+
+      def get_details_for_each_video(video_list)
         video_list.data.items.each do |video_item|
           params = video_params(video_item.id.videoId)
           v = videos_list_request(params) 
+          #byebug
           v = Yourub::Reader.parse_videos(v)
-          add_video_to_search_result(v.first) if v
+          # if v
+          byebug
+          yield v.first
+          # end
         end
       end
+
 
       def search_list_request(params)
         send_request("search", "list", params)
