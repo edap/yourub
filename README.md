@@ -93,13 +93,10 @@ client.get_views("G2b0OIkTraI")
 ```
 
 
-To have more values back, use the option `extended_info`
-##TODO
 
-1. adding a CLI
-2. the result should be yield, and not saved in an instance variable
-3. replace GoogleApiClient
-4. Implementing playlist
+##TODO
+* the result should be yield, and not saved in an instance variable
+* Implementing playlist
 
 ## Contributing
 
