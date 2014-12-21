@@ -18,7 +18,7 @@ module Yourub
             :safeSearch      => 'none',
            }
 
-          @categories, @videos = [], []
+          @categories = []
           @count_filter = {}
           @criteria = Yourub::Validator.confirm(criteria)
           search_by_criteria do |result|
@@ -35,33 +35,31 @@ module Yourub
       #   client = Yourub::Client.new
       #   client.get_views("G2b0OIkTraI")
       def get_views(video_id)
-        params = {:id => id, :part => 'statistics'}
+        params = {:id => video_id, :part => 'statistics'}
         request = videos_list_request(params)
         v = Yourub::Reader.parse_videos(request)
         v ? Yourub::CountFilter.get_views_count(v.first) : nil
       end
 
-private
-      def search_by_criteria
-        if @criteria.has_key? :id
-          search_by_id
-        else
-          merge_criteria_with_api_options
-          retrieve_categories
-          retrieve_videos do |res|
-            yield res
-          end
-        end
+      # return an hash containing the metadata for the given video
+      # @param video_id[Integer]
+      # @example
+      #   client = Yourub::Client.new
+      #   client.get("G2b0OIkTraI")
+      def get(video_id)
+        params = {:id => video_id, :part => 'snippet,statistics'}
+        request = videos_list_request(params)
+        entry = Yourub::Reader.parse_videos(request)
+        entry.nil? ? nil : entry.first
       end
 
-      def search_by_id
-        params = {
-          :id => @criteria[:id],
-          :part => 'snippet,statistics',
-        }
-        video_response = videos_list_request(params)
-        entry = Yourub::Reader.parse_videos(video_response)
-        add_video_to_search_result(entry.first) unless entry.nil?
+private
+      def search_by_criteria
+        merge_criteria_with_api_options
+        retrieve_categories
+        retrieve_videos do |res|
+          yield res
+        end
       end
 
       def merge_criteria_with_api_options
@@ -142,7 +140,7 @@ private
           #byebug
           v = Yourub::Reader.parse_videos(v)
           # if v
-          byebug
+          #byebug
           yield v.first
           # end
         end

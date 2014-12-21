@@ -39,19 +39,13 @@ describe Yourub::Validator do
                           category: 'Sport', 
                           max_results: 2, 
                           count_filter: {}, 
-                          query: '', 
-                          id: ''} }
+                          query: ''
+                      } }
         it "return only them params that has a value" do
           expect(subject).to eq({country: ["IT"], category: 'Sport', max_results: 2 })
         end
       end
 
-      context "when the parameter 'id' is set" do
-        let(:criteria) { {country: 'US', id: '1111111111'} }
-        it "ignore the other params and leave only the id" do 
-          expect(subject).to eq({ id: '1111111111' })
-        end
-      end
     end
 
     context "if none of the criteria are valid" do
