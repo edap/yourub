@@ -3,12 +3,12 @@ require 'yourub/rest/request'
 module Yourub
   module REST
     module Search
+
       # Search through the youtube API, executing multiple queries where necessary
       # @param criteria [Hash]
       # @example
       #   client = Yourub::Client.new
       #   client.search(country: "DE", category: "sports", order: 'date')   
-
       def search(criteria)
         begin
           @api_options= {
@@ -17,7 +17,6 @@ module Yourub
             :order           => 'relevance',
             :safeSearch      => 'none',
            }
-
           @categories = []
           @count_filter = {}
           @criteria = Yourub::Validator.confirm(criteria)
@@ -37,8 +36,8 @@ module Yourub
       def get_views(video_id)
         params = {:id => video_id, :part => 'statistics'}
         request = videos_list_request(params)
-        v = Yourub::Reader.parse_videos(request)
-        v ? Yourub::CountFilter.get_views_count(v.first) : nil
+        v = Yourub::Result.format(request).first
+        v ? Yourub::CountFilter.get_views_count(v) : nil
       end
 
       # return an hash containing the metadata for the given video
@@ -49,8 +48,7 @@ module Yourub
       def get(video_id)
         params = {:id => video_id, :part => 'snippet,statistics'}
         request = videos_list_request(params)
-        entry = Yourub::Reader.parse_videos(request)
-        entry.nil? ? nil : entry.first
+        Yourub::Result.format(request).first
       end
 
 private
@@ -124,25 +122,14 @@ private
         end    
       end
 
-#       def get_details_and_store(video_list)
-#         video_list.data.items.each do |video_item|
-#           params = video_params(video_item.id.videoId)
-#           v = videos_list_request(params) 
-#           v = Yourub::Reader.parse_videos(v)
-#           add_video_to_search_result(v.first) if v
-#         end
-#       end
-
       def get_details_for_each_video(video_list)
         video_list.data.items.each do |video_item|
           params = video_params(video_item.id.videoId)
           v = videos_list_request(params) 
-          #byebug
           v = Yourub::Reader.parse_videos(v)
-          # if v
-          #byebug
-          yield v.first
-          # end
+          if v
+            yield v.first
+          end
         end
       end
 

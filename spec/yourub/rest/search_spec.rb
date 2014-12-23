@@ -1,14 +1,20 @@
 require 'yourub'
+#decommenta tutto questo fino alla fine di before
+#require_relative '../../spec_helper.rb'
+
 
 describe Yourub::REST::Search do
-
   context "Initialize the Request class if the given parameter are valid" do
-    let(:subject) { Yourub::Client.new }
-
-    # it "return an error if the given country does not exist" do
-    #   subject.search(country: "MOON")
-    #   expect(lambda{subject}).not_to raise_error()
-    # end
+    let(:client) { Yourub::Client.new() }
+    #let(:discovered_api) { double("youtube_api")}
+    #let(:stubbed_response) {OpenStruct.new(data: "bla", status: 200)}
+    before do
+        # discovered_api.stub_chain(:videos, :list).and_return("videos.list")
+        # discovered_api.stub_chain(:search, :list).and_return("search.list")
+        # discovered_api.stub_chain(:video_categories, :list).and_return("video_categories.list")
+        # allow(client).to receive(:youtube_api).and_return(discovered_api)
+        # allow(client).to receive(:execute!).and_return(stubbed_response)
+    end
 
     describe "#search" do
       it "retrieves videos that have more than 100 views", focus:true do
@@ -73,31 +79,44 @@ describe Yourub::REST::Search do
 
       it "retrieves the given number of video for the given country" do
         videos = []
-        subject.search(country: "US", max_results: 5) do |v|
+        client.search(country: "US", max_results: 5) do |v|
           videos.push v
         end
         expect(videos.count).to eq(5)
       end
     end
 
-    describe "#get_views" do
-      it "retrieves the view count for given id" do
-        expect(subject.get_views("mN0Dbj-xHY0")).to be_a_kind_of(Integer)
-      end
-    end
-
     describe "#get" do
-      it "retrieves a video for the given id" do
-        video = subject.get("mN0Dbj-xHY0")
-        expect(video["id"]).to eql("mN0Dbj-xHY0")
+      let(:response) {OpenStruct.new(data: {items: [{id: 2}]}, status: 200)}
+
+      it "send the request with the correct parameters" do
+        allow(Yourub::REST::Request).to receive(:new).and_return(response)
+        expect(Yourub::REST::Request).to receive(:new)
+          .with(client, "videos", "list", {:id=>"mN0Dbj-xHY0", :part=>"snippet,statistics"})
+        client.get("mN0Dbj-xHY0")
       end
 
-      it "return nil for a not existing video" do
-        video = subject.get("fffffffffffffffffffff")
-        expect(video).to be_empty
-      end
     end
-  end
 
+    describe "#get_views" do
+      let(:response) {OpenStruct.new(data: {items: [{"statistics" => {"viewCount" => 2}}]}, status: 200)}
+
+      it "send the request with the correct parameters" do
+        allow(Yourub::REST::Request).to receive(:new).and_return(response)
+        expect(Yourub::REST::Request).to receive(:new)
+          .with(client, "videos", "list", {:id=>"mN0Dbj-xHY0", :part=>"statistics"})
+        client.get_views("mN0Dbj-xHY0")
+      end
+      
+      it "send the request with the correct parameters" do
+        allow(Yourub::REST::Request).to receive(:new).and_return(response)
+        expect(Yourub::REST::Request).to receive(:new)
+          .with(client, "videos", "list", {:id=>"mN0Dbj-xHY0", :part=>"statistics"})
+        client.get_views("mN0Dbj-xHY0")
+      end
+
+    end
+
+  end
 end
 
