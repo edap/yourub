@@ -38,6 +38,7 @@ private
           :api_method => api_method,
           :parameters => @params
         )    
+        #byebug
         @data = r.data
         @status = r.status
       end

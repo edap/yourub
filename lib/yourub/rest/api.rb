@@ -1,5 +1,6 @@
 require 'yourub/rest/search'
 require 'yourub/rest/request'
+require 'yourub/rest/categories'
 
 module Yourub
   module REST

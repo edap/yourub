@@ -1,8 +1,12 @@
 require 'yourub/rest/request'
+require 'yourub/rest/categories'
 
 module Yourub
   module REST
     module Search
+      #include Categories
+      #
+      include Yourub::REST::Categories
 
       # Search through the youtube API, executing multiple queries where necessary
       # @param criteria [Hash]
@@ -70,19 +74,24 @@ private
 
       def retrieve_categories
         if @criteria.has_key? :category
-          get_categories_for_country(@criteria[:country])
+          #get_categories_for_country(@criteria[:country])
+          #byebug
+          @categories = for_country(self,@criteria[:country])
+          byebug
           @categories = Yourub::Validator.valid_category(@categories, @criteria[:category])
         end
       end
 
-      def get_categories_for_country(country)
-        param = {"part" => "snippet","regionCode" => country }
-        categories_list = video_categories_list_request(param)
-        categories_list.data.items.each do |cat_result|
-          category_name = parse_name(cat_result["snippet"]["title"])
-          @categories.push(cat_result["id"] => category_name)
-        end
-      end
+      # def get_categories_for_country(country)
+      #   param = {"part" => "snippet","regionCode" => country }
+      #   categories_list = video_categories_list_request(param)
+
+      #   byebug
+      #   categories_list.data.items.each do |cat_result|
+      #     category_name = parse_name(cat_result["snippet"]["title"])
+      #     @categories.push(cat_result["id"] => category_name)
+      #   end
+      # end
 
       def retrieve_videos
         consume_criteria do |criteria|
@@ -127,12 +136,16 @@ private
           params = video_params(video_item.id.videoId)
           v = videos_list_request(params) 
           v = Yourub::Reader.parse_videos(v)
+          #if v && Yourub::CountFilter.accept?(v.first)
           if v
             yield v.first
           end
         end
       end
 
+      #ognuna di queste request deve essere migrata in un modulo a parte
+      # questo modulo non fa parte della REST api, e dovrebbe essere chaiamato
+      # MetaSearch
 
       def search_list_request(params)
         send_request("search", "list", params)
@@ -142,9 +155,9 @@ private
         send_request("videos", "list", params)
       end
 
-      def video_categories_list_request(params)
-        send_request("video_categories", "list", params)
-      end
+      # def video_categories_list_request(params)
+      #   send_request("video_categories", "list", params)
+      # end
 
       def send_request(resource_type, method, params)
         Yourub::REST::Request.new(self, resource_type, method, params)
@@ -165,9 +178,9 @@ private
         end
       end
 
-      def parse_name(name)
-        return name.gsub("/", "-").downcase.gsub(/\s+/, "")
-      end
+      # def parse_name(name)
+      #   return name.gsub("/", "-").downcase.gsub(/\s+/, "")
+      # end
 
     end
   end
