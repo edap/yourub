@@ -8,6 +8,7 @@ describe Yourub::REST::Search do
   context "Initialize the Request class if the given parameter are valid" do
     let(:client) { Yourub::Client.new() }
     #let(:discovered_api) { double("youtube_api")}
+    #let(:discovered_api) { double("youtube_api")}
     let(:response) {OpenStruct.new(data: {items: [{"statistics" => {"viewCount" => 2}}]}, status: 200)}
     let(:response) {OpenStruct.new(data: {items: [{"statistics" => {"viewCount" => 2}}]}, status: 200)}
     let(:category_response) {OpenStruct.new(data: {items: [{"snippet" => {"title" => "Sport"}, "id" => 1}]}, status: 200)}
@@ -15,7 +16,7 @@ describe Yourub::REST::Search do
       [{"1"=>"film&animation"}, {"2"=>"autos&vehicles"}, {"10"=>"music"}, {"15"=>"pets&animals"}, {"17"=>"sports"}, {"18"=>"shortmovies"}, {"19"=>"travel&events"}, {"20"=>"gaming"}, {"21"=>"videoblogging"}, {"22"=>"people&blogs"}, {"23"=>"comedy"}, {"24"=>"entertainment"}, {"25"=>"news&politics"}, {"26"=>"howto&style"}, {"27"=>"education"}, {"28"=>"science&technology"}, {"29"=>"nonprofits&activism"}, {"30"=>"movies"}, {"31"=>"anime-animation"}, {"32"=>"action-adventure"}, {"33"=>"classics"}, {"34"=>"comedy"}, {"35"=>"documentary"}, {"36"=>"drama"}, {"37"=>"family"}, {"38"=>"foreign"}, {"39"=>"horror"}, {"40"=>"sci-fi-fantasy"}, {"41"=>"thriller"}, {"42"=>"shorts"}, {"43"=>"shows"}, {"44"=>"trailers"}]
     }
     before do
-        # discovered_api.stub_chain(:videos, :list).and_return("videos.list")
+        # discovered_api.stub_chain(:data, :items).and_return(categories)
         # discovered_api.stub_chain(:search, :list).and_return("search.list")
         # discovered_api.stub_chain(:video_categories, :list).and_return("video_categories.list")
         # allow(client).to receive(:youtube_api).and_return(discovered_api)

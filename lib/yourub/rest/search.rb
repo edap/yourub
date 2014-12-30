@@ -6,7 +6,7 @@ module Yourub
     module Search
       #include Categories
       #
-      include Yourub::REST::Categories
+      #include Yourub::REST::Categories
 
       # Search through the youtube API, executing multiple queries where necessary
       # @param criteria [Hash]
@@ -76,8 +76,8 @@ private
         if @criteria.has_key? :category
           #get_categories_for_country(@criteria[:country])
           #byebug
-          @categories = for_country(self,@criteria[:country])
-          byebug
+          #@categories = for_country(self,@criteria[:country])
+          @categories = Yourub::REST::Categories.for_country(self,@criteria[:country])
           @categories = Yourub::Validator.valid_category(@categories, @criteria[:category])
         end
       end

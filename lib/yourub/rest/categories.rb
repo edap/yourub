@@ -3,7 +3,7 @@ require 'yourub/rest/request'
 module Yourub
   module REST
     module Categories
-
+      class << self
         def for_country(client, country)
           categories = []
           param = {"part" => "snippet","regionCode" => country }
@@ -23,7 +23,7 @@ module Yourub
         def parse_name(name)
           return name.gsub("/", "-").downcase.gsub(/\s+/, "")
         end
-
+      end
     end
   end
 end

@@ -14,6 +14,15 @@ def stub_get(path)
   stub_request(:get, Yourub::REST::Request::BASE_URL + path)
 end
 
+def fixture_path
+  File.expand_path('../fixtures', __FILE__)
+end
+
+def fixture(file)
+  file = File.read(fixture_path + '/' + file)
+  JSON.parse(file)
+end
+
 def capture_warning
   begin
     old_stderr = $stderr
