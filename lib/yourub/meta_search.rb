@@ -35,7 +35,7 @@ module Yourub
     #   client.get_views("G2b0OIkTraI")
     def get_views(video_id)
       params = {:id => video_id, :part => 'statistics'}
-      request = videos_list_request(params)
+      request = Yourub::REST::Videos.list(self,params)
       v = Yourub::Result.format(request).first
       v ? Yourub::CountFilter.get_views_count(v) : nil
     end
@@ -47,7 +47,7 @@ module Yourub
     #   client.get("G2b0OIkTraI")
     def get(video_id)
       params = {:id => video_id, :part => 'snippet,statistics'}
-      request = videos_list_request(params)
+      request = Yourub::REST::Videos.list(self,params)
       Yourub::Result.format(request).first
     end
 
@@ -78,7 +78,8 @@ private
     def retrieve_videos
       consume_criteria do |criteria|
         begin
-          req = search_list_request(criteria)
+          req = Yourub::REST::Search.list(self, criteria)
+          byebug
           get_details_for_each_video(req) do |v|
             yield v
           end
@@ -114,32 +115,15 @@ private
     end
 
     def get_details_for_each_video(video_list)
-      #byebug
       video_list.data.items.each do |video_item|
         params = video_params(video_item.id.videoId)
-        v = videos_list_request(params) 
+        v = Yourub::REST::Videos.list(self,params)
         v = Yourub::Reader.parse_videos(v)
         #if v && Yourub::CountFilter.accept?(v.first)
         if v
           yield v.first
         end
       end
-    end
-
-    #ognuna di queste request deve essere migrata in un modulo a parte
-    # questo modulo non fa parte della REST api, e dovrebbe essere chaiamato
-    # MetaSearch
-
-    def search_list_request(params)
-      send_request("search", "list", params)
-    end
-
-    def videos_list_request(params)
-      send_request("videos", "list", params)
-    end
-
-    def send_request(resource_type, method, params)
-      Yourub::REST::Request.new(self, resource_type, method, params)
     end
 
     def video_params(result_video_id)

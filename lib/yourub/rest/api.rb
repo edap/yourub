@@ -1,6 +1,7 @@
 #require 'yourub/rest/search'
 require 'yourub/rest/request'
 require 'yourub/rest/categories'
+require 'yourub/rest/search'
 require 'yourub/rest/videos'
 
 module Yourub
@@ -9,7 +10,7 @@ module Yourub
     module API
       # include Yourub::REST::Playlists
       # include Yourub::REST::Channels
-      #include Yourub::REST::Search
+      include Yourub::REST::Search
       include Yourub::REST::Categories
       include Yourub::REST::Videos
     end

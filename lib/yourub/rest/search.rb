@@ -2,7 +2,7 @@ require 'yourub/rest/request'
 
 module Yourub
   module REST
-    module Videos
+    module Search
       class << self
         # @param client[Yourub::Client]
         # @param params[hash]
@@ -10,12 +10,11 @@ module Yourub
         #
         # @example
         #   client = Yourub::Client.new
-        #   req = Yourub::REST::Videos.list(client, params)
+        #   req = Yourub::REST::Search.list(client, params)
         #
         def list(client, params)
-          Yourub::REST::Request.new(client,"videos", "list", params)
+          Yourub::REST::Request.new(client,"search", "list", params)
         end
-
       end
     end
   end
