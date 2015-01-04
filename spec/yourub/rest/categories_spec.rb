@@ -5,8 +5,8 @@ describe Yourub::REST::Categories do
   context "Initialize the Request class if the given parameter are valid" do
     let(:category_request) { double }
     let(:client) { Yourub::Client.new() }
-    let(:categories){fixture("categories_list.json")}
-    let(:categories_formatted){fixture("categories_list_formatted.json")}
+    let(:categories) { fixture("categories_list.json") }
+    let(:categories_formatted) { fixture("categories_list_formatted.json") }
 
     before do
       category_request.stub_chain(:data, :items).and_return(categories)

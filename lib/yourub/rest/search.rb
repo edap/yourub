@@ -74,24 +74,10 @@ private
 
       def retrieve_categories
         if @criteria.has_key? :category
-          #get_categories_for_country(@criteria[:country])
-          #byebug
-          #@categories = for_country(self,@criteria[:country])
           @categories = Yourub::REST::Categories.for_country(self,@criteria[:country])
           @categories = Yourub::Validator.valid_category(@categories, @criteria[:category])
         end
       end
-
-      # def get_categories_for_country(country)
-      #   param = {"part" => "snippet","regionCode" => country }
-      #   categories_list = video_categories_list_request(param)
-
-      #   byebug
-      #   categories_list.data.items.each do |cat_result|
-      #     category_name = parse_name(cat_result["snippet"]["title"])
-      #     @categories.push(cat_result["id"] => category_name)
-      #   end
-      # end
 
       def retrieve_videos
         consume_criteria do |criteria|
@@ -155,10 +141,6 @@ private
         send_request("videos", "list", params)
       end
 
-      # def video_categories_list_request(params)
-      #   send_request("video_categories", "list", params)
-      # end
-
       def send_request(resource_type, method, params)
         Yourub::REST::Request.new(self, resource_type, method, params)
       end
@@ -177,10 +159,6 @@ private
           @videos.push(entry)
         end
       end
-
-      # def parse_name(name)
-      #   return name.gsub("/", "-").downcase.gsub(/\s+/, "")
-      # end
 
     end
   end
