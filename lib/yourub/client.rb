@@ -1,9 +1,9 @@
-require 'yourub/rest/api'
+require 'yourub/meta_search'
 require 'google/api_client'
 
 module Yourub
   class Client < Google::APIClient
-    include Yourub::REST::API
+    include Yourub::MetaSearch
 
     attr_reader :videos
 

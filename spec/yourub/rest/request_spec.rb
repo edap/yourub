@@ -7,7 +7,7 @@ describe Yourub::REST::Request do
   context "during requests initialization" do
     let(:client) { Yourub::Client.new() }
     let(:discovered_api) { double("youtube_api")}
-    let(:stubbed_response) {OpenStruct.new(data: "bla", status: 200)}
+    let(:stubbed_response) { OpenStruct.new(data: "bla", status: 200) }
     let(:param) { {"part" => "snippet","regionCode" => "de" }}
 
     describe 'the request object calls the execute! method on the client' do

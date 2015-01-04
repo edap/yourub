@@ -5,7 +5,7 @@ require 'open-uri'
 
 require 'yourub/config'
 require 'yourub/client'
-#require 'yourub/search'
+require 'yourub/meta_search'
 require 'yourub/result'
 require 'yourub/version'
 require 'yourub/logger'
