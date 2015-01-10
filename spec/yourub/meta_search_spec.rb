@@ -93,7 +93,7 @@ describe Yourub::MetaSearch do
             videos.push v
           end
           expect(videos.count).to eq(2)
-        end  
+        end
       end
 
       it "retrieves the given number of video for the given word" do
@@ -102,7 +102,7 @@ describe Yourub::MetaSearch do
           videos.push v
         end
         expect(videos.count).to eq(3)
-      end    
+      end
 
       it "retrieves the given number of video for the given country" do
         videos = []
@@ -136,7 +136,7 @@ describe Yourub::MetaSearch do
           .with(client, "videos", "list", {:id=>"mN0Dbj-xHY0", :part=>"statistics"})
         client.get_views("mN0Dbj-xHY0")
       end
-      
+
       it "return the number of view for the given video" do
         expect(client.get_views("mN0Dbj-xHY0")).to eq(2)
       end
