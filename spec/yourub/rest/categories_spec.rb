@@ -15,16 +15,16 @@ describe Yourub::REST::Categories do
       allow(Yourub::REST::Request).to receive(:new).and_return(category_request)
     end
 
-    describe '.for_countries' do
+    describe '.for_country' do
       it 'create a request with the correct parameters' do
         expect(Yourub::REST::Request).to receive(:new)
           .with(client, 'video_categories', 'list',
                 'part' => 'snippet', 'regionCode' => ['US'])
-        subject.for_countries(client, ['US'])
+        subject.for_country(client, ['US'])
       end
 
       it 'return an hash containing the id and the title for each category' do
-        expect(subject.for_countries(client, ['US'])).to eq(
+        expect(subject.for_country(client, ['US'])).to eq(
           categories_formatted
         )
       end

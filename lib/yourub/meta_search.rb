@@ -8,7 +8,7 @@ module Yourub
     # @param criteria [Hash]
     # @example
     #   client = Yourub::Client.new
-    #   client.search(country: "DE", category: "sports", order: 'date')   
+    #   client.search(country: "DE", category: "sports", order: 'date')
     def search(criteria)
       begin
         @api_options= {
@@ -27,7 +27,7 @@ module Yourub
         Yourub.logger.error "#{e}"
       end
     end
-    
+
     # return the number of times a video was watched
     # @param video_id[Integer]
     # @example
@@ -52,6 +52,7 @@ module Yourub
     end
 
 private
+
     def search_by_criteria
       merge_criteria_with_api_options
       retrieve_categories
@@ -63,14 +64,14 @@ private
     def merge_criteria_with_api_options
       mappings = {query: :q, max_results: :maxResults, country: :regionCode}
       @api_options.merge! @criteria
-      @api_options.keys.each do |k| 
-        @api_options[ mappings[k] ] = @api_options.delete(k) if mappings[k] 
+      @api_options.keys.each do |k|
+        @api_options[ mappings[k] ] = @api_options.delete(k) if mappings[k]
       end
     end
 
     def retrieve_categories
       if @criteria.has_key? :category
-        @categories = Yourub::REST::Categories.for_countries(self,@criteria[:country])
+        @categories = Yourub::REST::Categories.for_country(self,@criteria[:country])
         @categories = Yourub::Validator.valid_category(@categories, @criteria[:category])
       end
     end
@@ -79,7 +80,6 @@ private
       consume_criteria do |criteria|
         begin
           req = Yourub::REST::Search.list(self, criteria)
-          byebug
           get_details_for_each_video(req) do |v|
             yield v
           end
@@ -111,28 +111,18 @@ private
         end
       else
         yield to_consume
-      end    
+      end
     end
 
     def get_details_for_each_video(video_list)
       video_list.data.items.each do |video_item|
-        params = video_params(video_item.id.videoId)
-        v = Yourub::REST::Videos.list(self,params)
-        v = Yourub::Reader.parse_videos(v)
-        #if v && Yourub::CountFilter.accept?(v.first)
-        if v
+        v = Yourub::REST::Videos.single_video(self, video_item.id.videoId)
+        v = Yourub::Result.format(v)
+        if v && Yourub::CountFilter.accept?(v.first)
+        #if v
           yield v.first
         end
       end
-    end
-
-    def video_params(result_video_id)
-      fields = URI::encode(
-        'items(id,snippet(title,thumbnails),statistics(viewCount))'
-      )
-      { :id => result_video_id,
-        :part => 'snippet,statistics,id',
-        :fields => fields }
     end
 
     def add_video_to_search_result(entry)

@@ -82,7 +82,7 @@ module Yourub
         ) unless( criteria.is_a? Hash )
       end
 
-      def minimum_param_present?  
+      def minimum_param_present?
         if @criteria.none?{|k,_| MINIMUM_PARAMS.include? k}
         raise ArgumentError.new(
           "minimum params to start a search is at least one of: #{MINIMUM_PARAMS.join(',')}"
@@ -94,7 +94,7 @@ module Yourub
         if @criteria.has_key? :order
           raise ArgumentError.new(
             "the given order is not in the available ones: #{ORDERS.join(',')}"
-          ) unless( ORDERS.include? @criteria[:order] )    
+          ) unless( ORDERS.include? @criteria[:order] )
         end
       end
 

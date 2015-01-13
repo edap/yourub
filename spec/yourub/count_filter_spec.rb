@@ -32,5 +32,4 @@ describe Yourub::CountFilter do
     Yourub::CountFilter.filter = {views: "<= 100"}
     expect(subject).to be_false
   end
-
 end
