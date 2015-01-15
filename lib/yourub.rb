@@ -11,7 +11,6 @@ require 'yourub/version'
 require 'yourub/logger'
 require 'yourub/count_filter'
 require 'yourub/validator'
-require 'yourub/reader'
 
 if defined?(Rails)
   require 'yourub/railtie'

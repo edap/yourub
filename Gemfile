@@ -9,7 +9,7 @@ end
 
 group :test do
   gem 'coveralls'
-  gem 'rspec', '>= 2.14'
+  gem 'rspec', '>= 3.00'
   gem 'rubocop', '>= 0.27'
   gem 'simplecov', '>= 0.9'
   gem 'webmock'
