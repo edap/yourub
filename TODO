@@ -1,4 +1,3 @@
-rmiuovere reader, usare result
-fare uno spec/support helper che stubba il result dando come items.data il file json
+fare uno spec/support helper che stubba il result dando come items.data il file json.Cominciare dal file...
 riordinare le spec
 rimuovere la pwd e stubbare il client

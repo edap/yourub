@@ -20,16 +20,16 @@ describe Yourub::CountFilter do
 
   it "accept the video if satisfy the condition" do
     Yourub::CountFilter.filter = {views: ">= 100"}
-    expect(subject).to be_true
+    expect(subject).to eq true
   end
 
   it "accept the video if filter is nil" do
     Yourub::CountFilter.filter = nil
-    expect(subject).to be_true
+    expect(subject).to eq true
   end
 
   it "not accept the video if it does not satisfy the condition" do
     Yourub::CountFilter.filter = {views: "<= 100"}
-    expect(subject).to be_false
+    expect(subject).to eq false
   end
 end

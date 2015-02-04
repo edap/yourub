@@ -1,5 +1,6 @@
 #WebMock.disable_net_connect!(allow_localhost: true)
 require 'webmock/rspec'
+Dir["./spec/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |c|
   c.filter_run_including :focus => true

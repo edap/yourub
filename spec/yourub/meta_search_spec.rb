@@ -5,6 +5,7 @@ require_relative '../spec_helper.rb'
 
 describe Yourub::MetaSearch do
   context 'Initialize the Request class if the given parameter are valid' do
+
     let(:client) { Yourub::Client.new() }
     # let(:discovered_api) { double("youtube_api")}
     #let(:discovered_api) { double("youtube_api")}
@@ -13,8 +14,8 @@ describe Yourub::MetaSearch do
     let(:search_list_response) { fixture("search_list.json")}
     let(:categories_formatted) { fixture("categories_list_formatted.json") }
     let(:single_video_response) { fixture("video_with_200_views.json") }
-
     let(:result){ double }
+
     before do
         # discovered_api.stub_chain(:data, :items).and_return(categories)
         # discovered_api.stub_chain(:search, :list).and_return("search.list")
@@ -22,6 +23,7 @@ describe Yourub::MetaSearch do
         # allow(client).to receive(:youtube_api).and_return(discovered_api)
         #allow(client).to receive(:execute!).and_return(response)
         #allow(Yourub::REST::Request).to receive(:new).and_return(response)
+        allow(result).to receive(:status).and_return(200)
     end
 
     describe '#search' do
@@ -39,7 +41,6 @@ describe Yourub::MetaSearch do
             allow(single_video).to receive_message_chain(
             :id, :videoId).and_return(1)
           end
-          allow(result).to receive(:status).and_return(200)
           allow(Yourub::REST::Search).to receive(:list).and_return(result)
 
           expect(Yourub::REST::Search).to receive(:list).with(
@@ -74,7 +75,6 @@ describe Yourub::MetaSearch do
             allow(single_video).to receive_message_chain(
             :id, :videoId).and_return(1)
           end
-          allow(result).to receive(:status).and_return(200)
 
           allow(Yourub::REST::Search).to receive(:list).and_return(result)
           allow(Yourub::REST::Videos).to receive(:single_video).and_return(single_result)
@@ -127,35 +127,27 @@ describe Yourub::MetaSearch do
       # end
     end
 
-    describe '#get' do
-      let(:response) do
-        OpenStruct.new(data: { items: [{ id: 2 }] }, status: 200)
+    describe "methods used only for single video" do
+      include_context "result load fixture", "video_with_200_views.json"
+
+      describe '#get' do
+        it 'send the request with the correct parameters' do
+          expect(Yourub::REST::Request).to receive(:new)
+            .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part=>"snippet,statistics")
+          client.get('mN0Dbj-xHY0')
+        end
       end
 
-      it 'send the request with the correct parameters' do
-        allow(Yourub::REST::Request).to receive(:new).and_return(response)
-        expect(Yourub::REST::Request).to receive(:new)
-          .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part=>"snippet,statistics")
-        client.get('mN0Dbj-xHY0')
-      end
-    end
+      describe '#get_views' do
+        it 'send the request with the correct parameters' do
+          expect(Yourub::REST::Request).to receive(:new)
+            .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part => "statistics")
+          client.get_views('mN0Dbj-xHY0')
+        end
 
-    describe '#get_views' do
-      let(:response) do
-        OpenStruct.new(data: { items: [{ "statistics" => { "viewCount" => 2 } }] }, status: 200)
-      end
-      before do
-        allow(Yourub::REST::Request).to receive(:new).and_return(response)
-      end
-
-      it 'send the request with the correct parameters' do
-        expect(Yourub::REST::Request).to receive(:new)
-          .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part => "statistics")
-        client.get_views('mN0Dbj-xHY0')
-      end
-
-      it 'return the number of view for the given video' do
-        expect(client.get_views('mN0Dbj-xHY0')).to eq(2)
+        it 'return the number of view for the given video' do
+          expect(client.get_views('mN0Dbj-xHY0')).to eq(200)
+        end
       end
     end
   end
