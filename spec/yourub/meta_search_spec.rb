@@ -61,23 +61,19 @@ describe Yourub::MetaSearch do
       end
 
       context 'integrates a view count filter' do
-        let(:single_result) { double }
-        before do
-          # video single request
-          allow(single_result).to receive_message_chain(
-            :data, :items).and_return(single_video_response)
-          allow(single_result).to receive(:status).and_return(200)
+        include_context 'result load fixture', 'video_with_200_views.json'
 
-          # search list req
-          allow(result).to receive_message_chain(
+        let(:search_result) { double }
+        before do
+          allow(search_result).to receive_message_chain(
             :data, :items).and_return(search_list_response)
-          result.data.items.each do |single_video|
+          search_result.data.items.each do |single_video|
             allow(single_video).to receive_message_chain(
             :id, :videoId).and_return(1)
           end
 
-          allow(Yourub::REST::Search).to receive(:list).and_return(result)
-          allow(Yourub::REST::Videos).to receive(:single_video).and_return(single_result)
+          allow(Yourub::REST::Search).to receive(:list).and_return(search_result)
+          allow(Yourub::REST::Videos).to receive(:single_video).and_return(result)
         end
         it 'retrieves videos that have more than 100 views' do
           filter = { views: '>= 100' }
