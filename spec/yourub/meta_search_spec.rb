@@ -28,6 +28,7 @@ describe Yourub::MetaSearch do
 
     describe '#search' do
       context 'forward the parameters to the request' do
+        include_context "search list result load fixture", "search_list.json"
         before do
           allow(Yourub::REST::Categories).to receive(
             :for_country).and_return(categories_formatted)
@@ -35,14 +36,6 @@ describe Yourub::MetaSearch do
         end
 
         it 'creates a search list request with the expected parameters' do
-          allow(result).to receive_message_chain(
-            :data, :items).and_return(search_list_response)
-          result.data.items.each do |single_video|
-            allow(single_video).to receive_message_chain(
-            :id, :videoId).and_return(1)
-          end
-          allow(Yourub::REST::Search).to receive(:list).and_return(result)
-
           expect(Yourub::REST::Search).to receive(:list).with(
                 client,
                 {:part => "snippet",
