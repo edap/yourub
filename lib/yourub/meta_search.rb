@@ -34,7 +34,7 @@ module Yourub
     #   client = Yourub::Client.new
     #   client.get_views("G2b0OIkTraI")
     def get_views(video_id)
-      params = {:id => video_id, :part => 'statistics'}
+      params = { :id => video_id, :part => 'statistics' }
       request = Yourub::REST::Videos.list(self,params)
       v = Yourub::Result.format(request).first
       v ? Yourub::CountFilter.get_views_count(v) : nil
@@ -119,7 +119,6 @@ private
         v = Yourub::REST::Videos.single_video(self, video_item.id.videoId)
         v = Yourub::Result.format(v)
         if v && Yourub::CountFilter.accept?(v.first)
-        #if v
           yield v.first
         end
       end

@@ -18,7 +18,6 @@ describe Yourub::REST::Videos do
           .with(client, "videos", "list", {"part"=>"snippet", "regionCode" => ['US']})
         subject.list(client, {"part"=>"snippet", "regionCode" => ['US']})
       end
-
     end
   end
 end

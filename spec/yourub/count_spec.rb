@@ -1,36 +1,40 @@
 require 'yourub'
 require 'byebug'
-#require_relative '../spec_helper.rb'
+require_relative '../spec_helper.rb'
 
 
 describe Yourub::MetaSearch do
-  context 'Initialize the Request class if the given parameter are valid' do
+  describe '#search' do
     let(:client) { Yourub::Client.new() }
-    # let(:discovered_api) { double("youtube_api")}
-    #let(:discovered_api) { double("youtube_api")}
-    # let(:response) {OpenStruct.new(data: {items: [{"statistics" => {"viewCount" => 2}}]}, status: 200)}
-    # let(:video_list_response) { fixture("video_list.json")}
-    # let(:search_list_response) { fixture("search_list.json")}
-    # let(:categories_formatted) { fixture("categories_list_formatted.json") }
-    #
-    #
-    # {"id"=>"ljwjEyJJtJA", "snippet"=>{"title"=>"Watch: NASA launches Orion space capsule aboard Delta IV", "thumbnails"=>{"default"=>{"url"=>"https://i.ytimg.com/vi/ljwjEyJJtJA/default.jpg", "width"=>120, "height"=>90}, "medium"=>{"url"=>"https://i.ytimg.com/vi/ljwjEyJJtJA/mqdefault.jpg", "width"=>320, "height"=>180}, "high"=>{"url"=>"https://i.ytimg.com/vi/ljwjEyJJtJA/hqdefault.jpg", "width"=>480, "height"=>360}, "standard"=>{"url"=>"https://i.ytimg.com/vi/ljwjEyJJtJA/sddefault.jpg", "width"=>640, "height"=>480}}}, "statistics"=>{"viewCount"=>"72510"}}
+    let(:result){ double }
 
-    let(:result){double}
-
-    describe '#search' do
-        context 'integrates a view count filter' do
-          it 'retrieves videos that have more than 100 views' do
-            filter = { views: '>= 100' }
+    context 'integrates a view count filter' do
+      context 'having a search result with 4 videos with 200 views' do
+        include_context "stub client connection"
+        include_context "search list result load fixture with single video", "search_list.json"
+        context "searching videos with more or equal 200 views" do
+          it 'find 4 videos' do
+            filter = { views: '>= 200' }
             videos = []
-
             client.search(query: "nasa", count_filter: filter, max_results: 2) do |v|
               videos.push(v)
             end
-
-            expect(videos.count).to eq(2)
+            expect(videos.count).to eq(4)
           end
         end
+
+        context "searching videos with more than 200 views" do
+          it 'find 0 video' do
+            filter = { views: '> 200' }
+            videos = []
+            client.search(query: "nasa", count_filter: filter, max_results: 2) do |v|
+              videos.push(v)
+            end
+            expect(videos.count).to eq(0)
+          end
+        end
+
+      end
     end
   end
 end
