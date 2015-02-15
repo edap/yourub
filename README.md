@@ -1,6 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/yourub.svg)](http://badge.fury.io/rb/yourub)
-{<img src="https://badge.fury.io/rb/yourub.svg" alt="Gem Version"
-/>}[http://badge.fury.io/rb/yourub]
+[![Dependency Status](https://gemnasium.com/edap/yourub.svg)](https://gemnasium.com/edap/yourub)
 [![Code Climate](https://codeclimate.com/github/edap/yourub.png)](https://codeclimate.com/github/edap/yourub)
 
 # Yourub
