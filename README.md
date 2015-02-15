@@ -88,7 +88,7 @@ that is the content of the response:
 
 `:order` String, one of these: 'date', 'rating', 'relevance', 'title', 'videocount', 'viewcount'. The default one is `'relevance'`
 
-It's necessary at least one of this parameters to start a search: `:country`, `:category`, `:query`, `:id`
+It's necessary at least one of this parameters to start a search: `:country`, `:category`, `:query`
  
 ### Methods
 * `search`, search youtube videos for the given parameters
