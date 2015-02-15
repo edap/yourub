@@ -1,5 +1,4 @@
 require 'yourub'
-require 'byebug'
 require_relative '../spec_helper.rb'
 
 

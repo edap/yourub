@@ -1,7 +1,5 @@
 require 'yourub'
-require 'byebug'
 require_relative '../spec_helper.rb'
-
 
 describe Yourub::MetaSearch do
   context 'Initialize the Request class if the given parameter are valid' do
