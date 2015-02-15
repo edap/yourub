@@ -1,5 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/yourub.svg)](http://badge.fury.io/rb/yourub)
 [![Dependency Status](https://gemnasium.com/edap/yourub.svg)](https://gemnasium.com/edap/yourub)
+[![Build Status](https://travis-ci.org/edap/yourub.svg?branch=master)](https://travis-ci.org/edap/yourub)
 [![Code Climate](https://codeclimate.com/github/edap/yourub.png)](https://codeclimate.com/github/edap/yourub)
 
 # Yourub
@@ -44,7 +45,7 @@ test:
 ```
 
 If you want to use it from the console, or in another program, you can simply
-pass an hash containing the needed option
+pass an hash containing the needed options
 ```ruby
 options = { developer_key: 'mySecretKey',
              application_name: 'yourub',
@@ -106,15 +107,25 @@ client = Yourub::Client.new
 client.get_views("G2b0OIkTraI")
 ```
 * `get_video`
-retrieves all the metatags available for one video
+retrieves all the metatags available for one
 ```ruby
 client = Yourub::Client.new
 client.get_video("G2b0OIkTraI")
 ```
 
-##TODO
-* Implementing playlist
+## Supported Ruby Versions
+This gem [supports][travis] the following Ruby versions:
 
+* Ruby 1.9.3
+* Ruby 2.0.0
+* Ruby 2.1
+* Ruby 2.2
+* JRuby 1.7 (in Ruby 1.9 mode)
+
+##TODO
+Here there is a [list](https://developers.google.com/youtube/v3/docs/) of the available methods.
+Currently, this gem implements: [videos.list](https://developers.google.com/youtube/v3/docs/videos/list), [search.list](https://developers.google.com/youtube/v3/docs/search/list) and [videoCategories.list](https://developers.google.com/youtube/v3/docs/videoCategories/list).
+The next methods that will be implemented are [playlist.list](https://developers.google.com/youtube/v3/docs/playlists/list) and [channelis.list](https://developers.google.com/youtube/v3/docs/channels/list)
 ## Contributing
 
 1. Fork it

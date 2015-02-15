@@ -3,7 +3,7 @@ module Yourub
     class Request
       attr_reader :data, :status
       #
-      # Once initializated, the Request object forward a request to 
+      # Once initializated, the Request object forward a request to
       # youtube api, once the request is completed, the variables @status and @data are populated
       #
       # @param client [Yourub::Client]
@@ -16,7 +16,7 @@ module Yourub
       #   Yourub::REST::Request.new(client,"video_categories", "list", param)
       #
       def initialize(client, resource_type, method, params)
-        @client = client 
+        @client = client
         @resource_type = resource_type.to_sym
         @method = method.to_sym
         @params = params
@@ -33,12 +33,11 @@ private
       # @data [String]
       #
       def perform
-        api_method =@client.youtube_api.send(@resource_type).send(@method) 
+        api_method =@client.youtube_api.send(@resource_type).send(@method)
         r = @client.execute!(
           :api_method => api_method,
           :parameters => @params
-        )    
-        #byebug
+        )
         @data = r.data
         @status = r.status
       end
