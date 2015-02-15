@@ -78,8 +78,6 @@ that is the content of the response:
 ### Available parameters
 `:query` String, example `aliens`
 
-`:id` Sting, a valid youtube video id, example `NisCkxU544c`. If this parameter is set, tha others are ignored
-
 `:country` String, one or more alpha-2 country codes [ISO 3166-1](http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm), example `US` or `IT, DE`. The default one is `US`
 
 `:category` String, example `comedy`. It accept the wildcard `all`, that retrieves videos for all the category for the given nation, or the default one (US) if no one is given
@@ -93,23 +91,26 @@ that is the content of the response:
 It's necessary at least one of this parameters to start a search: `:country`, `:category`, `:query`, `:id`
  
 ### Methods
-`search`, search youtube videos for the given parameters
+* `search`, search youtube videos for the given parameters
 ```ruby
 client = Yourub::Client.new
 client.search(id: "NisCkxU544c")
 ```
 
-`get_views`
-retrieves the number of views for the given videos id
+* `get_views`
+it return the number of views for the given video id
 ```ruby
 client = Yourub::Client.new
 client.get_views("G2b0OIkTraI")
 ```
-
-
+* `get_video`
+retrieves all the metatags available for one video
+```ruby
+client = Yourub::Client.new
+client.get_video("G2b0OIkTraI")
+```
 
 ##TODO
-* the result should be yield, and not saved in an instance variable
 * Implementing playlist
 
 ## Contributing
@@ -117,5 +118,7 @@ client.get_views("G2b0OIkTraI")
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+4. Run the test, run the spec/yourub/integration.rb file with a valid developer
+   key
+5. Push to the branch (`git push origin my-new-feature`)
+4. Create new Pull Request
