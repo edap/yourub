@@ -114,7 +114,7 @@ client.get_video("G2b0OIkTraI")
 ```
 
 ## Supported Ruby Versions
-This gem [supports][travis] the following Ruby versions:
+This gem [supports](https://travis-ci.org/edap/yourub) the following Ruby versions:
 
 * Ruby 1.9.3
 * Ruby 2.0.0
