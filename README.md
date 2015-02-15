@@ -97,7 +97,7 @@ It's necessary at least one of this parameters to start a search: `:country`, `:
 * `search`, search youtube videos for the given parameters
 ```ruby
 client = Yourub::Client.new
-client.search(id: "NisCkxU544c")
+client.search(query: "space missions")
 ```
 
 * `get_views`
