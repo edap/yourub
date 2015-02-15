@@ -1,10 +1,14 @@
 require 'yourub'
 
+#That is an integration test where the client is not stubbed, this test can
+#pass only with an internet connection and a valid developer key. Use this test
+#at the end of your changes, and add new tests if you have added new
+#functionalities. This file is not run in the default spec suite
 describe Yourub::Client do
 
   context "on initialize" do
     let(:subject) { Yourub::Client.new }
-    
+
     before do
     end
 
@@ -16,15 +20,6 @@ describe Yourub::Client do
     it "give me a list of valid countries" do
       expect(subject.countries).to be_a_kind_of(Array)
     end
-
-    it "retrieves more infos with the option" do
-      filter = {views: ">= 100"}
-      videos = []
-      subject.search(country: "US", category: "Sports", count_filter: filter, extended_info: true) do |v|
-        videos.push(v)
-      end
-      expect(videos.first.has_key? "statistics").to be_true
-    end   
 
     it "retrieves videos that have more than 100 views" do
       filter = {views: ">= 100"}
@@ -73,7 +68,7 @@ describe Yourub::Client do
         videos.push(v)
       end
       expect(videos.count).to eq(2)
-    end  
+    end
 
     it "retrieves the given number of video for the given word" do
       videos = []
@@ -81,7 +76,7 @@ describe Yourub::Client do
         videos.push(v)
       end
       expect(videos.count).to eq(3)
-    end    
+    end
 
     it "retrieves the given number of video for the given country" do
       videos = []

@@ -1,5 +1,5 @@
 yourub_defaults: &yourub_defaults
-  developer_key: 'MyDeveloperKey'
+  developer_key: 'YourDeveloperKey'
   youtube_api_service_name: 'youtube'
   youtube_api_version: 'v3'
   application_name: "yourub"
