@@ -106,11 +106,11 @@ it return the number of views for the given video id
 client = Yourub::Client.new
 client.get_views("G2b0OIkTraI")
 ```
-* `get_video`
+* `get`
 retrieves all the metatags available for one
 ```ruby
 client = Yourub::Client.new
-client.get_video("G2b0OIkTraI")
+client.get("G2b0OIkTraI")
 ```
 
 ## Supported Ruby Versions
