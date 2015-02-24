@@ -22,7 +22,6 @@ module Yourub
         @config = OpenStruct.new YAML.load_file(file_path)[environment]
       end
 
-
       def override_config_file(hash)
         opt = valid_options(hash)
         @config = OpenStruct.new opt
