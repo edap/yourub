@@ -51,19 +51,6 @@ module Yourub
       Yourub::Result.format(request).first
     end
 
-    def getChannels(client,username)
-      request = Yourub::REST::Channels.list(self,{:part => 'snippet,statistics,contentDetails',:forUsername => username})
-	Yourub::Result.format(request)
-    end
-    def getPlaylists(client,channelId)
-      request = Yourub::REST::Playlists.list(self,{:part => 'snippet',:channelId => channelId})
-	Yourub::Result.format(request)
-    end
-    def getPlaylistItems(client,playlistId)
-      request = Yourub::REST::PlaylistItems.list(self,{:part => 'snippet',:playlistId => playlistId})
-	Yourub::Result.format(request)
-    end
-
 private
 
     def search_by_criteria
