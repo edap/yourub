@@ -31,7 +31,7 @@ yourub_defaults: &yourub_defaults
   youtube_api_service_name: 'youtube'
   youtube_api_version: 'v3'
   application_name: "yourub"
-  application_version: "0.1"
+  application_version: "0.2"
   log_level: WARN
 
 development:
@@ -113,19 +113,13 @@ client = Yourub::Client.new
 client.get("G2b0OIkTraI")
 ```
 
-## Supported Ruby Versions
-This gem [supports](https://travis-ci.org/edap/yourub) the following Ruby versions:
-
-* Ruby 1.9.3
-* Ruby 2.0.0
-* Ruby 2.1
-* Ruby 2.2
-* JRuby 1.7 (in Ruby 1.9 mode)
 
 ##TODO
+
 Here there is a [list](https://developers.google.com/youtube/v3/docs/) of the available methods.
 Currently, this gem implements: [videos.list](https://developers.google.com/youtube/v3/docs/videos/list), [search.list](https://developers.google.com/youtube/v3/docs/search/list) and [videoCategories.list](https://developers.google.com/youtube/v3/docs/videoCategories/list).
 The next methods that will be implemented are [playlist.list](https://developers.google.com/youtube/v3/docs/playlists/list) and [channelis.list](https://developers.google.com/youtube/v3/docs/channels/list)
+
 ## Contributing
 
 1. Fork it

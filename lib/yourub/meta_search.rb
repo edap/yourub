@@ -11,6 +11,8 @@ module Yourub
     #   client.search(country: "DE", category: "sports", order: 'date')
     def search(criteria)
       begin
+        Yourub::CountFilter.filter = nil
+
         @api_options= {
           :part            => 'snippet',
           :type            => 'video',
@@ -71,15 +73,20 @@ private
 
     def retrieve_categories
       if @criteria.has_key? :category
+        puts "DEBUG: @criteria[:country] = #{@criteria[:country].inspect}"
         @categories = Yourub::REST::Categories.for_country(self,@criteria[:country])
+        puts "DEBUG: @categories after for_country = #{@categories.inspect}"
         @categories = Yourub::Validator.valid_category(@categories, @criteria[:category])
+        puts "DEBUG: @categories after valid_category = #{@categories.inspect}"
       end
     end
 
     def retrieve_videos
       consume_criteria do |criteria|
+        puts "DEBUG: retrieve_videos called with criteria = #{criteria.inspect}"
         begin
           req = Yourub::REST::Search.list(self, criteria)
+          puts "DEBUG: search returned #{req.data.items.size} items"
           get_details_for_each_video(req) do |v|
             yield v
           end
@@ -104,21 +111,27 @@ private
     end
 
     def consume_categories(to_consume)
+      puts "DEBUG: consume_categories called, @categories.size = #{@categories.size}"
       if @categories.size > 0
         @categories.each do |cat|
           to_consume[:videoCategoryId] = cat.keys[0].to_i
+          puts "DEBUG: yielding with videoCategoryId = #{to_consume[:videoCategoryId]}"
           yield to_consume
         end
       else
+        puts "DEBUG: no categories, yielding without videoCategoryId"
         yield to_consume
       end
     end
 
     def get_details_for_each_video(video_list)
+      puts "DEBUG: get_details_for_each_video called with #{video_list.data.items.size} items"
       video_list.data.items.each do |video_item|
-        v = Yourub::REST::Videos.single_video(self, video_item.id.videoId)
+        v = Yourub::REST::Videos.single_video(self, video_item.id.video_id)
         v = Yourub::Result.format(v)
+        puts "DEBUG: formatted video = #{v.inspect}"
         if v && Yourub::CountFilter.accept?(v.first)
+          puts "DEBUG: yielding video"
           yield v.first
         end
       end

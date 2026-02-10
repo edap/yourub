@@ -33,11 +33,19 @@ private
       # @data [String]
       #
       def perform
-        api_method =@client.youtube_api.send(@resource_type).send(@method)
-        r = @client.execute!(
-          :api_method => api_method,
-          :parameters => @params
-        )
+        api_method =
+          case [@resource_type, @method]
+          when [:search, :list]
+            :search_list
+          when [:videos, :list]
+            :videos_list
+          when [:video_categories, :list]
+            :video_categories_list
+          else
+            raise ArgumentError, "Unsupported resource_type/method: #{@resource_type}/#{@method}"
+          end
+
+        r = @client.execute!(api_method: api_method, parameters: @params.dup)
         @data = r.data
         @status = r.status
       end

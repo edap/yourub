@@ -9,9 +9,9 @@ end
 
 group :test do
   gem 'coveralls'
-  gem 'rspec', '>= 3.00'
-  gem 'rubocop', '>= 0.27'
-  gem 'simplecov', '>= 0.9'
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'simplecov'
   gem 'webmock'
 end
 

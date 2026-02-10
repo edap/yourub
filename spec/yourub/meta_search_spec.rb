@@ -21,6 +21,9 @@ describe Yourub::MetaSearch do
         # allow(client).to receive(:youtube_api).and_return(discovered_api)
         #allow(client).to receive(:execute!).and_return(response)
         #allow(Yourub::REST::Request).to receive(:new).and_return(response)
+        allow(Yourub::Config).to receive(:developer_key).and_return('secret')
+        allow(Yourub::Config).to receive(:application_name).and_return('yourub')
+        allow(Yourub::Config).to receive(:application_version).and_return('1.0')
         allow(result).to receive(:status).and_return(200)
     end
 
@@ -60,7 +63,7 @@ describe Yourub::MetaSearch do
             :data, :items).and_return(search_list_response)
           search_result.data.items.each do |single_video|
             allow(single_video).to receive_message_chain(
-            :id, :videoId).and_return(1)
+            :id, :video_id).and_return(1)
           end
 
           allow(Yourub::REST::Search).to receive(:list).and_return(search_result)
@@ -120,7 +123,7 @@ describe Yourub::MetaSearch do
       describe '#get' do
         it 'send the request with the correct parameters' do
           expect(Yourub::REST::Request).to receive(:new)
-            .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part=>"snippet,statistics")
+            .with(client, 'videos', 'list', { :id => "mN0Dbj-xHY0", :part=>"snippet,statistics" })
           client.get('mN0Dbj-xHY0')
         end
       end
@@ -128,7 +131,7 @@ describe Yourub::MetaSearch do
       describe '#get_views' do
         it 'send the request with the correct parameters' do
           expect(Yourub::REST::Request).to receive(:new)
-            .with(client, 'videos', 'list', :id => "mN0Dbj-xHY0", :part => "statistics")
+            .with(client, 'videos', 'list', { :id => "mN0Dbj-xHY0", :part => "statistics" })
           client.get_views('mN0Dbj-xHY0')
         end
 

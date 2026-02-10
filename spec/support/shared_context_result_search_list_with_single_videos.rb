@@ -10,7 +10,7 @@ shared_context "search list result load fixture with single video" do |fixture_f
       :data, :items).and_return(loaded_fixture)
     search_list_result.data.items.each do |single_video|
       allow(single_video).to receive_message_chain(
-      :id, :videoId).and_return(1)
+      :id, :video_id).and_return(1)
 
     # stub single video request
     allow(video_result).to receive(:status).and_return(200)

@@ -19,8 +19,8 @@ module Yourub
           param = {"part" => "snippet","regionCode" => country }
           categories_list = video_categories_list_request(client, param)
           categories_list.data.items.each do |cat_result|
-            category_name = parse_name(cat_result["snippet"]["title"])
-            categories.push(cat_result["id"] => category_name)
+            category_name = parse_name(cat_result.snippet.title)
+            categories.push(cat_result.id => category_name)
           end
           return categories
         end

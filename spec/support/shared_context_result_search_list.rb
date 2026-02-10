@@ -8,7 +8,7 @@ shared_context "search list result load fixture" do |fixture_file|
       :data, :items).and_return(loaded_fixture)
     search_list_result.data.items.each do |single_video|
       allow(single_video).to receive_message_chain(
-      :id, :videoId).and_return(1)
+      :id, :video_id).and_return(1)
     end
 
     allow(Yourub::REST::Search).to receive(:list).and_return(search_list_result)

@@ -7,6 +7,7 @@ module Yourub
         if request.status == 200
           data = JSON.parse(request.data.items.to_json)
         end
+        puts request.data.items.to_json
         data
       end
 

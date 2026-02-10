@@ -1,8 +1,8 @@
 require 'yourub/meta_search'
-require 'google/api_client'
+require 'google/apis/youtube_v3'
 
 module Yourub
-  class Client < Google::APIClient
+  class Client
     include Yourub::MetaSearch
 
     attr_reader :videos
@@ -34,30 +34,75 @@ module Yourub
         Yourub::Config.override_config_file(options)
       end
 
-      args = {
-        :key => config.developer_key,
-        :application_name => config.application_name,
-        :application_version => config.application_version,
-        :authorization => nil
-      }
-      super(args)
+      @service = Google::Apis::YoutubeV3::YouTubeService.new
+      @service.key = config.developer_key
+      @service.client_options.application_name = config.application_name
+      @service.client_options.application_version = config.application_version
     end
 
-    # @return countries [Array] contain a list of the available alpha-2 country codes ISO 3166-1
     def countries
       Yourub::Validator.available_countries
     end
 
-    # it returns the youtube service object
-    # @see http://www.rubydoc.info/github/google/google-api-ruby-client/Google/APIClient#discovered_api-instance_method
-    def youtube_api
-      @youtube_api ||= self.discovered_api(
-        config.youtube_api_service_name, config.youtube_api_version
-      )
+    # Compatibility shim used by Yourub::REST::Request
+    def execute!(api_method:, parameters:)
+      case api_method
+      when :search_list
+        part = parameters.delete(:part) || parameters.delete('part') || 'snippet'
+        opts = normalize_search_params(parameters)
+        data = @service.list_searches(part, **opts)
+        OpenStruct.new(data: data, status: 200)
+      when :videos_list
+        part = parameters.delete(:part) || parameters.delete('part') || 'snippet'
+        opts = normalize_videos_params(parameters)
+        data = @service.list_videos(part, **opts)
+        OpenStruct.new(data: data, status: 200)
+      when :video_categories_list
+        part = parameters.delete(:part) || parameters.delete('part') || 'snippet'
+        opts = normalize_categories_params(parameters)
+        data = @service.list_video_categories(part, **opts)
+        OpenStruct.new(data: data, status: 200)
+      else
+        raise ArgumentError, "Unsupported api_method #{api_method.inspect}"
+      end
     end
 
     def config
       Yourub::Config
+    end
+
+    private
+
+    def normalize_search_params(params)
+      transform_common_params(params).merge(
+        {
+          q: params[:q] || params['q'],
+          type: params[:type] || params['type'],
+          order: params[:order] || params['order'],
+          safe_search: params[:safeSearch] || params['safeSearch']
+        }.compact
+      )
+    end
+
+    def normalize_videos_params(params)
+      transform_common_params(params).merge(
+        {
+          id: params[:id] || params['id'],
+          fields: params[:fields] || params['fields']
+        }.compact
+      )
+    end
+
+    def normalize_categories_params(params)
+      transform_common_params(params)
+    end
+
+    def transform_common_params(params)
+      {
+        max_results: params[:maxResults] || params['maxResults'],
+        region_code: params[:regionCode] || params['regionCode'],
+        video_category_id: params[:videoCategoryId] || params['videoCategoryId']
+      }.compact
     end
   end
 end

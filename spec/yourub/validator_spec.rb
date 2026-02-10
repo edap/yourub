@@ -22,7 +22,7 @@ describe Yourub::Validator do
       context 'with an invalid :order value' do
         let(:criteria) { { order: 'banane', query: 'roberto baggio' } }
         it 'raise an argument error' do
-          expect(lambda{ subject }).to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
 
@@ -54,21 +54,21 @@ describe Yourub::Validator do
       context 'with non valid criteria' do
         let(:criteria) { { big: 1, bang: 2 } }
         it 'raise an argument error' do
-          expect(lambda{ subject }).to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
 
       context 'with criteria in the wrong format, like a string' do
         let(:criteria) { 'country = US' }
         it 'raise an argument error' do
-          expect(lambda{ subject }).to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
 
       context 'with an invalid country' do
         let(:criteria) { { country: 'MOON' } }
         it 'raise an argument error' do
-          expect(lambda{ subject }).to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
     end
@@ -79,7 +79,7 @@ describe Yourub::Validator do
           { max_results: 10, count_filter: { views: '>= 100' } }
         end
         it 'raise an argument error' do
-          expect(lambda{ subject }).to raise_error(ArgumentError)
+          expect { subject }.to raise_error(ArgumentError)
         end
       end
     end
@@ -92,7 +92,7 @@ describe Yourub::Validator do
     context 'with an invalid category' do
       let(:selected_one) {"spaghetti"}
       it 'raise an argument error' do
-        expect(lambda{subject}).to raise_error(ArgumentError)
+        expect { subject }.to raise_error(ArgumentError)
       end
     end
 

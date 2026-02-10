@@ -18,8 +18,12 @@ describe Yourub::REST::Categories do
     describe '.for_country' do
       it 'create a request with the correct parameters' do
         expect(Yourub::REST::Request).to receive(:new)
-          .with(client, 'video_categories', 'list',
-                'part' => 'snippet', 'regionCode' => ['US'])
+          .with(
+            client,
+            'video_categories',
+            'list',
+            { 'part' => 'snippet', 'regionCode' => ['US'] }
+          )
         subject.for_country(client, ['US'])
       end
 

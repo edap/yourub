@@ -33,6 +33,6 @@ describe Yourub::Client do
 
   it 'raise an argument error if there is no a developer_key in the option' do
     options = { application_name: 'my app' }
-    expect(lambda{ Yourub::Client.new(options) }).to raise_error(ArgumentError)
+    expect { Yourub::Client.new(options) }.to raise_error(ArgumentError)
   end
 end
