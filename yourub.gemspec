@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Davide Prati"]
   spec.email         = ["lastexxit@gmail.com "]
   spec.description   = %q{Youtube API v3 parser}
-  spec.summary       = %q{Yourub is a gem that search videos on youtebe using the YouTube API v3}
+  spec.summary       = %q{Yourub is a gem to search for videos on youtebe}
   spec.homepage      = "https://github.com/edap/yourub"
   spec.license       = "MIT"
 
@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'google-apis-youtube_v3', '>= 0.1', '< 2.0'
-  spec.add_development_dependency "bundler", ">= 2.0", "< 3.0"
+  spec.add_development_dependency 'bundler', '>= 2.0', '< 3.0'
 
 end
