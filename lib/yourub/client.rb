@@ -38,10 +38,29 @@ module Yourub
       @service.key = config.developer_key
       @service.client_options.application_name = config.application_name
       @service.client_options.application_version = config.application_version
+      @video_categories_cache = {}
     end
 
     def countries
       Yourub::Validator.available_countries
+    end
+
+    def list_video_categories(region_code: nil, hl: nil)
+      key = video_categories_cache_key(region_code, hl)
+      return @video_categories_cache[key] if @video_categories_cache.key?(key)
+
+      part = "snippet"
+      kwargs = {}
+      unless region_code.nil? || region_code.to_s.strip.empty?
+        kwargs[:region_code] = region_code.to_s.strip.upcase
+      end
+      kwargs[:hl] = hl.to_s.strip if hl && !hl.to_s.strip.empty?
+
+      @video_categories_cache[key] = @service.list_video_categories(part, **kwargs)
+    end
+
+    def flush_video_categories_cache!
+      @video_categories_cache.clear
     end
 
     # Compatibility shim used by Yourub::REST::Request
@@ -73,13 +92,25 @@ module Yourub
 
     private
 
+    def video_categories_cache_key(region_code, hl)
+      region = if region_code.nil? || region_code.to_s.strip.empty?
+                 "_default"
+               else
+                 region_code.to_s.strip.upcase
+               end
+      hl_part = (hl.nil? || hl.to_s.strip.empty?) ? "" : hl.to_s.strip
+      "#{region}\0#{hl_part}"
+    end
+
     def normalize_search_params(params)
+      query = params[:q] || params['q'] || ""
+
       transform_common_params(params).merge(
         {
-          q: params[:q] || params['q'],
-          type: params[:type] || params['type'],
-          order: params[:order] || params['order'],
-          safe_search: params[:safeSearch] || params['safeSearch']
+         q: query,
+         type: params[:type] || params['type'],
+         order: params[:order] || params['order'],
+         safe_search: params[:safeSearch] || params['safeSearch']
         }.compact
       )
     end

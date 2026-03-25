@@ -5,22 +5,20 @@ describe Yourub::MetaSearch do
   context 'Initialize the Request class if the given parameter are valid' do
 
     let(:client) { Yourub::Client.new() }
-    # let(:discovered_api) { double("youtube_api")}
-    #let(:discovered_api) { double("youtube_api")}
-    let(:response) {OpenStruct.new(data: {items: [{"statistics" => {"viewCount" => 2}}]}, status: 200)}
-    let(:videos_list_response) { fixture("videos_list.json")}
-    let(:search_list_response) { fixture("search_list.json")}
-    let(:categories_formatted) { fixture("categories_list_formatted.json") }
-    let(:single_video_response) { fixture("video_with_200_views.json") }
+    let(:videos_list_items) do
+      raw = fixture("videos_list.json")
+      raw.is_a?(Hash) && raw["items"] ? raw["items"] : raw
+    end
+    let(:videos_list_request) do
+      OpenStruct.new(status: 200, data: OpenStruct.new(items: videos_list_items))
+    end
+    let(:search_list_response) do
+      raw = fixture("search_list.json")
+      raw.is_a?(Hash) && raw["items"] ? raw["items"] : raw
+    end
     let(:result){ double }
 
     before do
-        # discovered_api.stub_chain(:data, :items).and_return(categories)
-        # discovered_api.stub_chain(:search, :list).and_return("search.list")
-        # discovered_api.stub_chain(:video_categories, :list).and_return("video_categories.list")
-        # allow(client).to receive(:youtube_api).and_return(discovered_api)
-        #allow(client).to receive(:execute!).and_return(response)
-        #allow(Yourub::REST::Request).to receive(:new).and_return(response)
         allow(Yourub::Config).to receive(:developer_key).and_return('secret')
         allow(Yourub::Config).to receive(:application_name).and_return('yourub')
         allow(Yourub::Config).to receive(:application_version).and_return('1.0')
@@ -28,29 +26,77 @@ describe Yourub::MetaSearch do
     end
 
     describe '#search' do
-      context 'forward the parameters to the request' do
+      context 'search.list for query nasa' do
         include_context "search list result load fixture", "search_list.json"
+
         before do
-          allow(Yourub::REST::Categories).to receive(
-            :for_country).and_return(categories_formatted)
-          allow(Yourub::REST::Videos).to receive(:list).and_return(response)
+          allow(Yourub::REST::Videos).to receive(:list).and_return(videos_list_request)
         end
 
-        it 'creates a search list request with the expected parameters' do
+        it 'calls Search.list with snippet video search and q' do
           expect(Yourub::REST::Search).to receive(:list).with(
-                client,
-                {:part => "snippet",
-                 :type => "video",
-                 :order => "date",
-                 :safeSearch => "none",
-                 :category => "Sports",
-                 :maxResults => 5,
-                 :regionCode => "US",
-                 :videoCategoryId => 17}
+            client,
+            {
+              part: "snippet",
+              type: "video",
+              order: "relevance",
+              safeSearch: "none",
+              q: "nasa",
+              maxResults: 5
+            }
           )
-          client.search(
-            country: 'US', category: 'Sports', order: 'date', max_results: 5
-          ) { |v| v }
+          client.search(query: "nasa", max_results: 5) { |_v| }
+        end
+      end
+
+      context 'category name resolves via list_video_categories' do
+        let(:de_category_response) do
+          items = fixture("categories_list.json").fetch("items").map do |h|
+            OpenStruct.new(
+              id: h["id"],
+              snippet: OpenStruct.new(title: h.dig("snippet", "title"))
+            )
+          end
+          OpenStruct.new(items: items)
+        end
+
+        include_context "search list result load fixture", "search_list.json"
+
+        before do
+          allow(client).to receive(:list_video_categories).and_return(de_category_response)
+          allow(Yourub::REST::Videos).to receive(:list).and_return(videos_list_request)
+        end
+
+        it 'loads default catalog when country omitted and sets videoCategoryId' do
+          expect(client).to receive(:list_video_categories).with(region_code: nil)
+          expect(Yourub::REST::Search).to receive(:list).with(
+            client,
+            hash_including(
+              q: "nasa",
+              order: "relevance",
+              videoCategoryId: 28
+            )
+          )
+          client.search(query: "nasa", category: "science") { |_v| }
+        end
+
+        it 'uses first country for the category catalog when country is set' do
+          expect(client).to receive(:list_video_categories).with(region_code: "DE")
+          expect(Yourub::REST::Search).to receive(:list).with(
+            client,
+            hash_including(
+              regionCode: "DE",
+              q: "goals",
+              videoCategoryId: 17
+            )
+          )
+          client.search(query: "goals", country: "DE", category: "sports") { |_v| }
+        end
+
+        it 'raises ArgumentError listing categories when name does not match' do
+          expect {
+            client.search(query: "x", category: "zznotacategoryzz") { |_v| }
+          }.to raise_error(ArgumentError, /category not found/)
         end
       end
 
@@ -78,7 +124,7 @@ describe Yourub::MetaSearch do
             videos.push(v)
           end
 
-          expect(videos.count).to eq(4)
+          expect(videos.count).to eq(5)
         end
 
        it 'retrieves no videos with more than 200 views' do
@@ -118,25 +164,13 @@ describe Yourub::MetaSearch do
     end
 
     describe "methods used only for single video" do
-      include_context "result load fixture", "video_with_200_views.json"
+      include_context "result load fixture", 'video_with_200_views.json'
 
       describe '#get' do
         it 'send the request with the correct parameters' do
           expect(Yourub::REST::Request).to receive(:new)
-            .with(client, 'videos', 'list', { :id => "mN0Dbj-xHY0", :part=>"snippet,statistics" })
-          client.get('mN0Dbj-xHY0')
-        end
-      end
-
-      describe '#get_views' do
-        it 'send the request with the correct parameters' do
-          expect(Yourub::REST::Request).to receive(:new)
-            .with(client, 'videos', 'list', { :id => "mN0Dbj-xHY0", :part => "statistics" })
-          client.get_views('mN0Dbj-xHY0')
-        end
-
-        it 'return the number of view for the given video' do
-          expect(client.get_views('mN0Dbj-xHY0')).to eq(200)
+            .with(client, 'videos', 'list', { :id => "yIlTwwJv1Ac", :part=>"snippet,statistics" })
+          client.get('yIlTwwJv1Ac')
         end
       end
     end

@@ -4,14 +4,34 @@ require_relative '../../spec_helper.rb'
 describe Yourub::REST::Categories do
   context 'Initialize the Request class if the given parameter are valid' do
     let(:category_request)     { double }
-    let(:client)               { Yourub::Client.new }
-    let(:categories)           { fixture('categories_list.json') }
-    let(:categories_formatted) { fixture('categories_list_formatted.json') }
+    let(:client)               { Yourub::Client.new(client_options) }
+    let(:client_options) do
+      { developer_key: 'secret',
+        application_name: 'yourub',
+        application_version: '1.0',
+        log_level: 'WARN' }
+    end
+    let(:category_items)       { fixture('categories_list.json').fetch('items') }
+    let(:categories_objects) do
+      category_items.map do |h|
+        OpenStruct.new(
+          id: h['id'],
+          snippet: OpenStruct.new(title: h.dig('snippet', 'title'))
+        )
+      end
+    end
+    let(:categories_formatted) do
+      category_items.map do |h|
+        title = h.dig('snippet', 'title')
+        slug = title.gsub("/", "-").downcase.gsub(/\s+/, "")
+        { h['id'] => slug }
+      end
+    end
 
     before do
       allow(category_request).to receive_message_chain(
         :data, :items
-      ).and_return(categories)
+      ).and_return(categories_objects)
       allow(Yourub::REST::Request).to receive(:new).and_return(category_request)
     end
 
@@ -22,7 +42,7 @@ describe Yourub::REST::Categories do
             client,
             'video_categories',
             'list',
-            { 'part' => 'snippet', 'regionCode' => ['US'] }
+            { 'part' => 'snippet', 'regionCode' => 'US' }
           )
         subject.for_country(client, ['US'])
       end

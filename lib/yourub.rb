@@ -4,6 +4,7 @@ require 'net/https'
 require 'open-uri'
 
 require 'yourub/config'
+require 'yourub/country_codes'
 require 'yourub/client'
 require 'yourub/meta_search'
 require 'yourub/result'

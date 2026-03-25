@@ -6,16 +6,16 @@ describe Yourub::Validator do
   context 'passing an hash containing the search criteria' do
     context 'with some valid criteria' do
       context 'with an old hash syntax' do
-        let(:criteria) { { 'country' => 'US', 'category' => 'Sport' } }
+        let(:criteria) { { 'country' => 'US', 'category' => 'Sport', 'query' => 'highlights' } }
         it 'return the criteria in the sym: val format' do
-          expect(subject).to eq(country: ['US'], category: 'Sport')
+          expect(subject).to eq(country: ['US'], category: 'Sport', query: 'highlights')
         end
       end
 
       context 'with valid nation but unknown parameter city' do
-        let(:criteria) { { country: 'US', city: 'Berlin' } }
+        let(:criteria) { { country: 'US', city: 'Berlin', query: 'goals' } }
         it 'return criteria including nation but excluding the city' do
-          expect(subject).to eq(country: ['US'])
+          expect(subject).to eq(country: ['US'], query: 'goals')
         end
       end
 
@@ -27,9 +27,9 @@ describe Yourub::Validator do
       end
 
       context 'with a given category without a country' do
-        let(:criteria) { { country: '', category: 'Sport' } }
-        it 'add the default country' do
-          expect(subject).to eq(category: 'Sport', :country => ['US'])
+        let(:criteria) { { category: 'Sport', query: 'highlights' } }
+        it 'does not add a country' do
+          expect(subject).to eq(category: 'Sport', query: 'highlights')
         end
       end
 
@@ -39,12 +39,32 @@ describe Yourub::Validator do
             category: 'Sport',
             max_results: 2,
             count_filter: {},
-            query: ''
+            query: 'goals'
           }
         end
         it 'return only them params that has a value' do
           expect(subject).to eq(
-            country: ['IT'], category: 'Sport', max_results: 2
+            country: ['IT'], category: 'Sport', max_results: 2, query: 'goals'
+          )
+        end
+      end
+
+      context 'without a query' do
+        let(:criteria) { { country: 'US', category: 'Sport' } }
+        it 'raises explaining that q is required' do
+          expect { subject }.to raise_error(
+            ArgumentError,
+            'search requires a :query parameter.'
+          )
+        end
+      end
+
+      context 'with a blank query' do
+        let(:criteria) { { query: '   ' } }
+        it 'raises' do
+          expect { subject }.to raise_error(
+            ArgumentError,
+            'search requires a :query parameter.'
           )
         end
       end
@@ -66,7 +86,7 @@ describe Yourub::Validator do
       end
 
       context 'with an invalid country' do
-        let(:criteria) { { country: 'MOON' } }
+        let(:criteria) { { country: 'MOON', query: 'test' } }
         it 'raise an argument error' do
           expect { subject }.to raise_error(ArgumentError)
         end

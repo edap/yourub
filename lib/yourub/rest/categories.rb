@@ -4,8 +4,8 @@ module Yourub
   module REST
     module Categories
       class << self
-        # it returns an Array containing the categories for the given country,
-        # or the DEFAULT_COUNTRY if no countries was given.
+        # it returns an Array containing the categories for the given country
+        # (regionCode). Pass a country code when you need locale-specific titles.
         # @param client[Yourub::Client]
         # @param country[Array]
         #
@@ -16,7 +16,8 @@ module Yourub
         #
         def for_country(client, country)
           categories = []
-          param = {"part" => "snippet","regionCode" => country }
+          region = Array(country).compact.first
+          param = { "part" => "snippet", "regionCode" => region }
           categories_list = video_categories_list_request(client, param)
           categories_list.data.items.each do |cat_result|
             category_name = parse_name(cat_result.snippet.title)

@@ -2,24 +2,20 @@ module Yourub
   module Validator
     class << self
 
-      DEFAULT_COUNTRY = "US"
-      COUNTRIES       = [ 'AR','AU','AT','BE','BR','CA','CL','CO','CZ','EG','FR','DE','GB','HK',
-                          'HU','IN','IE','IL','IT','JP','JO','MY','MX','MA','NL','NZ','PE','PH',
-                          'PL','RU','SA','SG','ZA','KR','ES','SE','CH','TW','AE','US']
+      COUNTRIES       = Yourub::CountryCodes::ISO_3166_1_ALPHA2
       ORDERS          = ['date', 'rating', 'relevance', 'title', 'videoCount', 'viewCount']
       VALID_PARAMS    = [:country, :category, :query, :max_results, :count_filter, :order ]
-      MINIMUM_PARAMS  = [:country, :category, :query]
 
       def confirm(criteria)
         valid_format?(criteria)
         @criteria = symbolize_keys(criteria)
 
         remove_empty_and_non_valid_params
-        minimum_param_present?
+        validate_search_query
 
         validate_order
+        validate_max_results
         countries_to_array
-        add_default_country_if_category_is_present
         validate_countries
         set_filter_count_options
 
@@ -41,8 +37,11 @@ module Yourub
         }
       end
 
+
       def remove_empty_and_non_valid_params
-        @criteria.keep_if{|k,v| ( (VALID_PARAMS.include? k) && v.size > 0) }
+        @criteria.reject! do |k, v|
+          !VALID_PARAMS.include?(k) || v.nil? || (v.respond_to?(:empty?) && v.empty?)
+        end
       end
 
       def countries_to_array
@@ -54,12 +53,6 @@ module Yourub
         end
       end
 
-      def add_default_country_if_category_is_present
-        if (@criteria.has_key? :category) && (!@criteria.has_key? :country)
-          @criteria[:country] = [ DEFAULT_COUNTRY ]
-        end
-      end
-
       def set_filter_count_options
         if @criteria.has_key? :count_filter
           Yourub::CountFilter.filter = @criteria.delete(:count_filter)
@@ -67,11 +60,9 @@ module Yourub
       end
 
       def valid_category(categories, selected_category)
-        return categories if selected_category == 'all'
-        categories = categories.select {|k| k.has_value?(selected_category.downcase)}
+        categories = categories.select {|k| k.has_value?(selected_category.downcase.gsub(/\s+/, ""))}
         if categories.first.nil?
-          raise ArgumentError.new(
-            "The category #{selected_category} does not exists in the following ones: #{categories.join(',')}")
+          raise ArgumentError.new("The category #{selected_category} does not exists...")
         end
         return categories
       end
@@ -82,11 +73,11 @@ module Yourub
         ) unless( criteria.is_a? Hash )
       end
 
-      def minimum_param_present?
-        if @criteria.none?{|k,_| MINIMUM_PARAMS.include? k}
-        raise ArgumentError.new(
-          "minimum params to start a search is at least one of: #{MINIMUM_PARAMS.join(',')}"
-        )
+      def validate_search_query
+        q = @criteria[:query]
+        if !@criteria.key?(:query) || q.nil? || q.to_s.strip.empty?
+          raise ArgumentError,
+                "search requires a :query parameter."
         end
       end
 
@@ -99,11 +90,13 @@ module Yourub
       end
 
       def validate_countries
-        if @criteria.has_key? :country
-          raise ArgumentError.new(
-            "the given country is not in the available ones: #{COUNTRIES.join(',')}"
-          ) unless( (@criteria[:country] - COUNTRIES).size == 0 )
-        end
+        return unless @criteria.has_key?(:country)
+
+        unknown = @criteria[:country] - COUNTRIES
+        return if unknown.empty?
+
+        raise ArgumentError,
+              "invalid ISO 3166-1 alpha-2 country code(s): #{unknown.join(', ')}"
       end
 
       def validate_max_results
