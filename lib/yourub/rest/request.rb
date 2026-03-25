@@ -24,14 +24,6 @@ module Yourub
       end
 
 private
-      #
-      # call the 'execute!' method on the client
-      #
-      # == Returns :
-      # The Request object with the variable @status and @data initialized
-      # @status [Int]
-      # @data [String]
-      #
       def perform
         api_method =
           case [@resource_type, @method]

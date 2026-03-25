@@ -102,8 +102,8 @@ private
       end
 
       if term.casecmp("all").zero?
-        @categories = []
-        return
+        raise ArgumentError,
+              'category "all" is not supported; omit :category to search without a video category filter.'
       end
 
       region_code = region_code_for_category_catalog

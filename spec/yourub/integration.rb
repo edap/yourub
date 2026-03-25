@@ -30,9 +30,9 @@ describe Yourub::Client do
       expect(videos).to_not be_empty
     end
 
-    it "retrieves videos for all the categories" do
+    it "searches without a category filter when :category is omitted" do
       videos = []
-      subject.search(country: "US", category: "all") do |v|
+      subject.search(query: "nasa", country: "US") do |v|
         videos.push(v)
       end
       expect(videos).to_not be_empty

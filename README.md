@@ -1,7 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/yourub.svg)](http://badge.fury.io/rb/yourub)
-[![Dependency Status](https://gemnasium.com/edap/yourub.svg)](https://gemnasium.com/edap/yourub)
-[![Build Status](https://travis-ci.org/edap/yourub.svg?branch=master)](https://travis-ci.org/edap/yourub)
-[![Code Climate](https://codeclimate.com/github/edap/yourub.png)](https://codeclimate.com/github/edap/yourub)
+
 
 # Yourub
 Yourub is a gem for searching YouTube videos using the YouTube Data API v3.
@@ -28,8 +26,6 @@ rails app,  create a app/config/yourub.yml file as follow:
 ```
 yourub_defaults: &yourub_defaults
   developer_key: 'YoUrDevEl0PerKey'
-  youtube_api_service_name: 'youtube'
-  youtube_api_version: 'v3'
   application_name: "yourub"
   application_version: "0.2"
   log_level: WARN
@@ -45,7 +41,8 @@ test:
 ```
 
 If you want to use it from the console, or in another program, you can simply
-pass an hash containing the needed options
+pass an hash containing the needed options. Change 'yourub' with the name of your application.
+
 ```ruby
 options = { developer_key: 'mySecretKey',
              application_name: 'yourub',
@@ -58,7 +55,7 @@ client = Yourub::Client.new(options)
 
 ### Examples
 
-**`search` always requires a non-empty `:query`** (YouTube `search.list` uses the `q` parameter). Optional filters narrow results.
+**`search`** always requires a non-empty `:query` (YouTube `search.list` uses the `q` parameter). Optional filters narrow results.
 
 Recent sports-related videos in Germany (category is matched by **name**, see below):
 
@@ -85,31 +82,25 @@ that is the content of the response:
 
 `:query` — **Required.** Non-empty string (after stripping whitespace). Sent as YouTube **`q`**.
 
-`:country` — Optional. One or more [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) codes, e.g. `"US"` or `"IT,DE"`. Each code is applied as **`regionCode`** on `search.list`. Codes are validated against **`Yourub::CountryCodes::ISO_3166_1_ALPHA2`** (also exposed as **`Yourub::Validator::COUNTRIES`** / **`client.countries`**).
+`:country` — Optional. One or more [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) codes, e.g. `"US"` or `"IT,DE"`. Each code is applied as **`regionCode`** on `search.list`. Codes are validated against `Yourub::CountryCodes::ISO_3166_1_ALPHA2` (also exposed as `Yourub::Validator::COUNTRIES` / `client.countries`).
 
-`:category` — Optional. How it behaves:
-
-- **`"all"`** (case-insensitive): no `videoCategoryId` filter; search uses your `:query` (and optional `regionCode`) only.
-- **Any other non-empty string:** treated as a **human-readable category name**, not a numeric API id. Yourub loads **`videoCategories.list`** (via `client.list_video_categories`, **cached per client**) and picks the first category whose **`snippet.title`** contains your string (**case-insensitive substring**), e.g. `"science"` → “Science & Technology”.  
-  - With **`country`**: the **first** country in the list selects the category **catalog** (`regionCode` for that API call).  
-  - **Without `country`**: the request omits `regionCode`, i.e. the **documented default catalog** (US).  
-  If nothing matches, `search` raises **`ArgumentError`** with a message listing available **`id: title`** pairs.
+`:category` — Optional. If the name of a category is set, Yourub resolves a category_id from the name: it calls `list_video_categories`, cached on the client), finds the first item whose title contains your string (case-insensitive). Omit `category` entirely when you do not want a category filter. If the name does not match any category, `ArgumentError` lists `id: title` lines of the available categories.
 
 `:count_filter` — Optional hash, e.g. `{ views: ">= 100" }` or `{ views: "== 600" }` (applied after fetching full video resources).
 
-`:max_results` — Optional integer from **1** to **50**.
+`:max_results` — Optional integer from 1 to 50.
 
-`:order` — Optional. One of: **`date`**, **`rating`**, **`relevance`**, **`title`**, **`videoCount`**, **`viewCount`**. Default **`relevance`** (matches the API).
+`:order` — Optional. One of: `date`, `rating`, `relevance`, `title`, `videoCount`, `viewCount`. Default `relevance`.
  
 ### Methods
-* **`search`** — Runs a YouTube search and yields each video hash that passes optional filters. Requires `:query` and typically a block.
+* `search` — Runs a YouTube search and yields each video hash that passes optional filters. Requires `:query` and typically a block.
 
 ```ruby
 client = Yourub::Client.new(developer_key: "…", application_name: "yourub", application_version: "1.0")
 client.search(query: "space missions") { |v| puts v["id"] }
 ```
 
-* **`get`** — Fetches one video’s metadata (`snippet` + `statistics`).
+* `get` — Fetches one video’s metadata (`snippet` + `statistics`).
 
 ```ruby
 client = Yourub::Client.new(developer_key: "…", application_name: "yourub", application_version: "1.0")
@@ -120,11 +111,11 @@ client.get("G2b0OIkTraI")
 
   Calls YouTube [`videoCategories.list`](https://developers.google.com/youtube/v3/docs/videoCategories/list) using only **`regionCode`** (via `region_code:`). The API does not use category IDs in this helper; you pass an [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) region when you want that country’s category list.
 
-  **`region_code`:** Optional. If omitted or blank, the request is sent **without** `regionCode`, which matches the documented default catalog (United States).
+  **`region_code`:** Optional. If omitted or blank, the request is sent without `regionCode`, which matches the documented default catalog (United States).
 
   **`hl`:** Optional. Sets the `hl` query parameter so snippet titles in the response use the requested locale (e.g. Spanish labels for Spain).
 
-  **Caching:** Responses are cached **per client instance**, keyed by `region_code` and `hl`, because category metadata changes rarely. Repeat calls with the same arguments return the same in-memory result without another HTTP request.
+  **Caching:** Responses are cached per client instance, keyed by `region_code` and `hl`, because category metadata changes rarely. Repeat calls with the same arguments return the same in-memory result without another HTTP request.
 
   **Return value:** A `Google::Apis::YoutubeV3::VideoCategoryListResponse` (from `google-apis-youtube_v3`). Use `#items` to iterate categories (each has `#id` and `#snippet`).
 

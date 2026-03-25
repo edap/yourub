@@ -98,6 +98,15 @@ describe Yourub::MetaSearch do
             client.search(query: "x", category: "zznotacategoryzz") { |_v| }
           }.to raise_error(ArgumentError, /category not found/)
         end
+
+        it 'rejects category "all"' do
+          expect {
+            client.search(query: "nasa", category: "all") { |_v| }
+          }.to raise_error(
+            ArgumentError,
+            'category "all" is not supported; omit :category to search without a video category filter.'
+          )
+        end
       end
 
       context 'integrates a view count filter' do
@@ -152,15 +161,6 @@ describe Yourub::MetaSearch do
       #   end
       # end
 
-      # context 'when the parameter category is == "all"' do
-      #   it 'it iterates through all the categories' do
-      #     videos = []
-      #     client.search(country: 'US', category: 'all') do |v|
-      #       videos.push v
-      #     end
-      #     expect(videos).to_not be_empty
-      #   end
-      # end
     end
 
     describe "methods used only for single video" do
