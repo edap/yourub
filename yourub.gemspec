@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'google-apis-youtube_v3', '>= 0.1', '< 2.0'
-  spec.add_development_dependency 'bundler', '>= 2.0', '< 3.0'
+  spec.add_development_dependency 'bundler', '>= 2.0'
 
 end
