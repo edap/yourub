@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/yourub.svg)](http://badge.fury.io/rb/yourub)
+[![Gem Version](https://badge.fury.io/rb/yourub.svg)](https://badge.fury.io/rb/yourub)
 
 
 # Yourub
