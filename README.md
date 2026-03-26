@@ -55,7 +55,7 @@ client = Yourub::Client.new(options)
 
 ### Examples
 
-**`search`** always requires a non-empty `:query` (YouTube `search.list` uses the `q` parameter). Optional filters narrow results.
+`search` always requires a non-empty `:query`. Optional filters narrow results.
 
 Recent sports-related videos in Germany (category is matched by **name**, see below):
 
@@ -80,11 +80,11 @@ that is the content of the response:
 ```
 ### Available parameters
 
-`:query` — **Required.** Non-empty string (after stripping whitespace). Sent as YouTube **`q`**.
+`:query` — **Required.** Non-empty string (after stripping whitespace).
 
-`:country` — Optional. One or more [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) codes, e.g. `"US"` or `"IT,DE"`. Each code is applied as **`regionCode`** on `search.list`. Codes are validated against `Yourub::CountryCodes::ISO_3166_1_ALPHA2` (also exposed as `Yourub::Validator::COUNTRIES` / `client.countries`).
+`:country` — Optional. One or more [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) codes, e.g. `"US"` or `"IT,DE"`. Codes are validated against `Yourub::CountryCodes::ISO_3166_1_ALPHA2` (also exposed as `Yourub::Validator::COUNTRIES` / `client.countries`).
 
-`:category` — Optional. If the name of a category is set, Yourub resolves a category_id from the name: it calls `list_video_categories`, cached on the client), finds the first item whose title contains your string (case-insensitive). Omit `category` entirely when you do not want a category filter. If the name does not match any category, `ArgumentError` lists `id: title` lines of the available categories.
+`:category` — Optional. If the name of a category is set, Yourub resolves a category_id from the name: it calls `list_video_categories`, (cached on the client), finds the first item whose title contains your string (case-insensitive). If the name does not match any category, `ArgumentError` lists `id: title` lines of the available categories.
 
 `:count_filter` — Optional hash, e.g. `{ views: ">= 100" }` or `{ views: "== 600" }` (applied after fetching full video resources).
 
@@ -111,13 +111,13 @@ client.get("G2b0OIkTraI")
 
   Calls YouTube [`videoCategories.list`](https://developers.google.com/youtube/v3/docs/videoCategories/list) using only **`regionCode`** (via `region_code:`). The API does not use category IDs in this helper; you pass an [ISO 3166-1 alpha-2](https://www.iso.org/iso-3166-country-codes.html) region when you want that country’s category list.
 
-  **`region_code`:** Optional. If omitted or blank, the request is sent without `regionCode`, which matches the documented default catalog (United States).
+  `region_code`: Optional. If omitted or blank, the request is sent without `regionCode`, which matches the documented default catalog (United States).
 
-  **`hl`:** Optional. Sets the `hl` query parameter so snippet titles in the response use the requested locale (e.g. Spanish labels for Spain).
+  `hl`: Optional. Sets the `hl` query parameter so snippet titles in the response use the requested locale (e.g. Spanish labels for Spain).
 
-  **Caching:** Responses are cached per client instance, keyed by `region_code` and `hl`, because category metadata changes rarely. Repeat calls with the same arguments return the same in-memory result without another HTTP request.
+  Caching: Responses are cached per client instance, keyed by `region_code` and `hl`, because category metadata changes rarely. Repeat calls with the same arguments return the same in-memory result without another HTTP request.
 
-  **Return value:** A `Google::Apis::YoutubeV3::VideoCategoryListResponse` (from `google-apis-youtube_v3`). Use `#items` to iterate categories (each has `#id` and `#snippet`).
+  Return value: A `Google::Apis::YoutubeV3::VideoCategoryListResponse` (from `google-apis-youtube_v3`). Use `#items` to iterate categories (each has `#id` and `#snippet`).
 
 ```ruby
 client = Yourub::Client.new(options)
