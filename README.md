@@ -92,14 +92,12 @@ end
 * `search` — Runs a YouTube search and yields each video hash that passes optional filters. Requires `:query` and typically a block.
 
 ```ruby
-client = Yourub::Client.new(developer_key: "…", application_name: "yourub", application_version: "1.0")
 client.search(query: "space missions") { |v| puts v["id"] }
 ```
 
 * `get` — Fetches one video’s metadata (`snippet` + `statistics`).
 
 ```ruby
-client = Yourub::Client.new(developer_key: "…", application_name: "yourub", application_version: "1.0")
 client.get("G2b0OIkTraI")
 ```
 
